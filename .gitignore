@@ -15,3 +15,15 @@ appsettings.Development.json
 **dist/
 .env
 **coverage
+
+
+# Azurite
+__blobstorage__
+__queuestorage__
+__tablestorage__
+__azurite_db*.*
+
+# DB
+*.dbmdl
+*.jfm
+

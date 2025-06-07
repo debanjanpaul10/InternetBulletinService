@@ -28,7 +28,7 @@ const msalConfig = {
 		clientId: "12912858-246d-4231-a73a-00f2242379d3",
 		authority: b2cPolicies.authorities.signUpSignIn.authority,
 		redirectUri: UrlConstants.WebUrls.AzureWebUrl,
-		knownAuthorities: [ b2cPolicies.authorityDomain ],
+		knownAuthorities: [b2cPolicies.authorityDomain],
 	},
 };
 

@@ -1,17 +1,6 @@
 [
   {
-    "Name": "BulletinWebApplication",
-    "Projects": [
-      {
-        "Path": "InternetBulletin.Web\\InternetBulletin.Web.csproj",
-        "Action": "Start",
-        "DebugTarget": "IBBS Web"
-      },
-      {
-        "Path": "InternetBulletin.API\\InternetBulletin.API.csproj",
-        "Action": "Start",
-        "DebugTarget": "IBBS API"
-      }
-    ]
+    "Name": "New Profile",
+    "Projects": []
   }
 ]

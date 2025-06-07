@@ -1,6 +1,6 @@
 import { makeStyles, tokens } from "@fluentui/react-components";
 
-const useStyles = makeStyles( {
+const useStyles = makeStyles({
 	card: {
 		margin: "20px auto",
 		width: "100%",
@@ -24,23 +24,23 @@ const useStyles = makeStyles( {
 		textOverflow: "ellipsis",
 	},
 	createButton: {
-		color: tokens.colorPaletteLightGreenBackground3,
+		color: tokens.colorBrandForegroundLink,
 		margin: "10px 0px 10px 0px",
 		cursor: "pointer",
 		fontSize: tokens.fontSizeBase300,
 		textDecoration: "none",
 		"&:hover": {
-			color: tokens.colorPaletteLightGreenBorder2,
+			color: tokens.colorBrandForegroundLinkHover,
 		},
 	},
 	cancelButton: {
-		color: tokens.colorPaletteRedBackground3,
+		color: tokens.colorStatusDangerBackground3,
 		margin: "10px 0px 10px 0px",
 		cursor: "pointer",
 		fontSize: tokens.fontSizeBase300,
 		textDecoration: "none",
 		"&:hover": {
-			color: tokens.colorPaletteRedBorder2,
+			color: tokens.colorStatusDangerBackground3Hover,
 		},
 	},
 	aiEditButton: {
@@ -57,6 +57,6 @@ const useStyles = makeStyles( {
 		justifyContent: "center",
 		alignItems: "center",
 	},
-} );
+});
 
 export { useStyles };

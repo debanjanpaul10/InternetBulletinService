@@ -1,0 +1,164 @@
+{
+    "Azure": {
+        "AzureResources": [
+            {
+                "Name": "app-webapi-internet-bulletin",
+                "ResourceType": "App Service"
+            },
+            {
+                "Name": "appcs-internet-bulletin-service",
+                "ResourceType": "App Configuration"
+            },
+            {
+                "Name": "mi-user-internet-bulletin",
+                "ResourceType": "User-assigned managed identity"
+            },
+            {
+                "Name": "sql-internet-bulletin",
+                "ResourceType": "Azure SQL Server"
+            },
+            {
+                "Name": "func-internet-bulletin",
+                "ResourceType": "Azure Function App (Serverless)"
+            },
+            {
+                "Name": "webapp-web-internet-bulletin",
+                "ResourceType": "Azure Static Web App"
+            },
+            {
+                "Name": "storeinternetbulletin",
+                "ResourceType": "Azure Storage Account"
+            },
+            {
+                "AppRegistrations": [
+                    "aad-internet-bulletin-web",
+                    "aad-internet-bulletin-api",
+                    "aad-internet-bulletin-ai",
+                    "InternetBulletinDeploy"
+                ]
+            }
+        ],
+        "AzureAppConfigSettings": [
+            {
+                "key": "AzureAD:GraphAPI:ClientId",
+                "label": "BaseConfiguration",
+                "value": "12912858-246d-4231-a73a-00f2242379d3",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "AzureAD:GraphAPI:ClientSecret",
+                "label": "BaseConfiguration",
+                "value": "<CLIENT_SECRET>",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "AzureAD:GraphAPI:DefaultScope",
+                "label": "BaseConfiguration",
+                "value": "00000003-0000-0000-c000-000000000000/.default",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "AzureAD:IBBS.AI:ClientId",
+                "label": "BaseConfiguration",
+                "value": "f8ac7954-d9bf-40a5-84fb-2d39102ef1df",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "AzureAD:IBBS.AI:ClientSecret",
+                "label": "BaseConfiguration",
+                "value": "<CLIENT_SECRET>",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "AzureAdB2C:ClientId",
+                "label": "BulletinAPI",
+                "value": "59977ff4-0747-41e8-bd9f-b2719b11865f",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "AzureAdB2C:Instance",
+                "label": "BulletinAPI",
+                "value": "https://debanjanlab.b2clogin.com",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "AzureAdB2C:Issuer",
+                "label": "BulletinAPI",
+                "value": "https://debanjanlab.b2clogin.com/6358139c-059e-44ac-a2f7-d811206db757/v2.0/",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "AzureAdB2C:TenantId",
+                "label": "BaseConfiguration",
+                "value": "6358139c-059e-44ac-a2f7-d811206db757",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "IbbsAiApiBaseUrl",
+                "label": "BaseConfiguration",
+                "value": "app-webapi-internet-bulletin-ai-e9eehngfd2f8d6dy.centralindia-01.azurewebsites.net/",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "ManagedIdentityClientId",
+                "label": "BaseConfiguration",
+                "value": "907bca1b-9901-4ec6-b33d-d08ea1c70283",
+                "content_type": "",
+                "tags": {}
+            },
+            {
+                "key": "SqlConnectionString",
+                "label": "BaseConfiguration",
+                "value": "<SQL_SERVER_CONNECTION_STRING>",
+                "content_type": "",
+                "tags": {}
+            }
+        ],
+        "EnvironmentVariables": [
+            {
+                "name": "AppConfigurationEndpoint",
+                "value": "https://appcs-internet-bulletin-service.azconfig.io",
+                "slotSetting": true
+            },
+            {
+                "name": "ManagedIdentityClientId",
+                "value": "4e1df089-f5e9-499f-807b-b396d8e4c88d",
+                "slotSetting": true
+            }
+        ],
+        "Github": {
+            "GithubActionsSecrets": [
+                {
+                    "Name": "AZURE_DB_CONNECTION_STRING",
+                    "Value": "The sql server connection string"
+                },
+                {
+                    "Name": "AZURE_DB_SECRET",
+                    "Value": "The azure db secret"
+                },
+                {
+                    "Name": "AZURE_FUNCTIONAPP_PUBLISH_PROFILE",
+                    "Value": "The azure function app publish profile"
+                },
+                {
+                    "Name": "AZURE_IBBS_API_PUBLISH_PROFILE",
+                    "Value": "The azure app service for api publish profile"
+                },
+                {
+                    "Name": "AZURE_IBBS_WEB_DEPLOYMENT_SECRET",
+                    "Value": "The azure static web app deployment secret key"
+                }
+            ]
+        }
+    }
+}

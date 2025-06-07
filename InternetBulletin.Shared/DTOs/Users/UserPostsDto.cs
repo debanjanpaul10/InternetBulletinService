@@ -5,7 +5,7 @@
 // <summary>The User Posts DTO.</summary>
 // *********************************************************************************
 
-namespace InternetBulletin.Shared.DTOs
+namespace InternetBulletin.Shared.DTOs.Users
 {
 	/// <summary>
 	/// The User Posts DTO.
@@ -26,7 +26,7 @@ namespace InternetBulletin.Shared.DTOs
 		/// <value>
 		/// The post title.
 		/// </value>
-		public string PostTitle { get; set; }
+		public string PostTitle { get; set; } = string.Empty;
 
 		/// <summary>
 		/// Gets or sets the post created date.

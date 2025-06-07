@@ -44,34 +44,34 @@ function IBBS() {
 
 	return (
 		<div className="main-content">
-			<div className={ styles.headerNav }>
+			<div className={styles.headerNav}>
 				<HeaderComponent />
 			</div>
-			<div className={ styles.bodyContent }>
-				{ " " }
+			<div className={styles.bodyContent}>
+				{" "}
 				<ToasterComponent />
 				<SideDrawerComponent />
 				<Routes>
 					<Route
-						path={ Headings.Home.Link }
-						element={ <LandingPageComponent /> }
+						path={Headings.Home.Link}
+						element={<LandingPageComponent />}
 					/>
 					<Route
-						path={ Headings.CreatePost.Link }
-						element={ <CreatePostComponent /> }
+						path={Headings.CreatePost.Link}
+						element={<CreatePostComponent />}
 					/>
-					<Route path="*" element={ <PageNotFound /> } />
+					<Route path="*" element={<PageNotFound />} />
 					<Route
-						path={ Headings.MyProfile.Link }
-						element={ <ProfileComponent /> }
+						path={Headings.MyProfile.Link}
+						element={<ProfileComponent />}
 					/>
 					<Route
-						path={ Headings.AboutUs.Link }
-						element={ <AboutUsComponent /> }
+						path={Headings.AboutUs.Link}
+						element={<AboutUsComponent />}
 					/>
 				</Routes>
 			</div>
-			<div className={ styles.footerContent }>
+			<div className={styles.footerContent}>
 				<FooterComponent />
 			</div>
 		</div>

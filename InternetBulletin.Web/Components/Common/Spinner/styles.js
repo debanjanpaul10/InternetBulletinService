@@ -1,6 +1,6 @@
 import { makeStyles } from "@fluentui/react-components";
 
-const useStyles = makeStyles( {
+const useStyles = makeStyles({
     spinnerPageDark: {
         position: "fixed",
         top: 0,
@@ -25,6 +25,6 @@ const useStyles = makeStyles( {
         zIndex: 9999,
         backgroundColor: "rgba(255, 255, 255, 0.5)"
     }
-} );
+});
 
 export { useStyles };

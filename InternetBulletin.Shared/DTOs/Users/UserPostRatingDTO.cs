@@ -5,7 +5,7 @@
 // <summary>User post rating d t o.</summary>
 // *********************************************************************************
 
-namespace InternetBulletin.Shared.DTOs.Posts
+namespace InternetBulletin.Shared.DTOs.Users
 {
     /// <summary>
     /// User post rating d t o.

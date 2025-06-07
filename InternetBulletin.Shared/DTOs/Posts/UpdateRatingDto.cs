@@ -4,7 +4,6 @@
 //	</copyright>
 // <summary>Update rating DTO..</summary>
 // *********************************************************************************
-using System.Reflection.Metadata;
 
 namespace InternetBulletin.Shared.DTOs.Posts
 {

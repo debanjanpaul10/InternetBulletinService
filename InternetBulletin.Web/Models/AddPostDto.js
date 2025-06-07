@@ -26,7 +26,7 @@ class AddPostDtoModel {
 	 * @param {string} PostContent The content of the post.
 	 * @param {string} PostCreatedBy The user who created the post.
 	 */
-	constructor ( PostTitle, PostContent, PostCreatedBy ) {
+	constructor(PostTitle, PostContent, PostCreatedBy) {
 		this.postTitle = PostTitle;
 		this.postContent = PostContent;
 		this.postCreatedBy = PostCreatedBy;

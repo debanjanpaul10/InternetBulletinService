@@ -34,6 +34,10 @@ namespace InternetBulletin.API.Controllers
         /// </summary>
         private readonly IPostRatingsService _postRatingsService = postRatingsService;
 
+        /// <summary>
+        /// Gets all the user ratings async
+        /// </summary>
+        /// <returns>The action result of the ratings data</returns>
         [HttpGet]
         [Route(RouteConstants.GetAllUserRatings_Route)]
         public async Task<IActionResult> GetAllUserRatingsAsync()

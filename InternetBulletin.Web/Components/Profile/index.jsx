@@ -38,51 +38,51 @@ function ProfileComponent() {
 	const { Headings } = MyProfilePageConstants;
 
 	const UserProfileStoreData = useSelector(
-		( state ) => state.UserReducer.userProfileData
+		(state) => state.UserReducer.userProfileData
 	);
 	const IsUserProfileDataLoadingStoreData = useSelector(
-		( state ) => state.UserReducer.isUserProfileDataLoading
+		(state) => state.UserReducer.isUserProfileDataLoading
 	);
 
-	const [ userStateData, setUserStateData ] = useState( {} );
-	const [ isUserDataLoading, setIsUserDataLoading ] = useState( true );
-	const [ currentLoggedInUser, setCurrentLoggedInUser ] = useState( {} );
+	const [userStateData, setUserStateData] = useState({});
+	const [isUserDataLoading, setIsUserDataLoading] = useState(true);
+	const [currentLoggedInUser, setCurrentLoggedInUser] = useState({});
 
 	// #region SIDE EFFECTS
 
-	useEffect( () => {
+	useEffect(() => {
 		const getProfileData = async () => {
 			const accessToken = await getAccessToken();
-			dispatch( GetUserProfileDataAsync( accessToken ) );
+			dispatch(GetUserProfileDataAsync(accessToken));
 		};
 		isUserLoggedIn() && getProfileData();
-	}, [] );
+	}, []);
 
-	useEffect( () => {
+	useEffect(() => {
 		if (
 			UserProfileStoreData !== null &&
 			UserProfileStoreData !== undefined &&
-			Object.values( UserProfileStoreData ).length > 0 &&
+			Object.values(UserProfileStoreData).length > 0 &&
 			UserProfileStoreData !== userStateData
 		) {
-			setUserStateData( UserProfileStoreData );
+			setUserStateData(UserProfileStoreData);
 		}
-	}, [ UserProfileStoreData ] );
+	}, [UserProfileStoreData]);
 
-	useEffect( () => {
-		if ( isUserDataLoading !== IsUserProfileDataLoadingStoreData ) {
-			setIsUserDataLoading( IsUserProfileDataLoadingStoreData );
+	useEffect(() => {
+		if (isUserDataLoading !== IsUserProfileDataLoadingStoreData) {
+			setIsUserDataLoading(IsUserProfileDataLoadingStoreData);
 		}
-	}, [ IsUserProfileDataLoadingStoreData ] );
+	}, [IsUserProfileDataLoadingStoreData]);
 
-	useEffect( () => {
-		if ( accounts.length > 0 ) {
-			const userName = accounts[ 0 ].idTokenClaims?.extension_UserName;
-			setCurrentLoggedInUser( userName );
+	useEffect(() => {
+		if (accounts.length > 0) {
+			const userName = accounts[0].idTokenClaims?.extension_UserName;
+			setCurrentLoggedInUser(userName);
 		} else {
 			setCurrentLoggedInUser();
 		}
-	}, [ instance, accounts ] );
+	}, [instance, accounts]);
 
 	/**
 	 * Checks if user is logged in.
@@ -103,10 +103,10 @@ function ProfileComponent() {
 	 * @returns {string} The access token.
 	 */
 	const getAccessToken = async () => {
-		const tokenData = await instance.acquireTokenSilent( {
+		const tokenData = await instance.acquireTokenSilent({
 			...loginRequests,
-			account: accounts[ 0 ],
-		} );
+			account: accounts[0],
+		});
 
 		return tokenData.accessToken;
 	};
@@ -115,14 +115,14 @@ function ProfileComponent() {
 		<div className="container">
 			<div className="row">
 				<div className="col-sm-12 mt-4">
-					<LargeTitle className={ styles.profileHeading }>
-						{ Headings.WelcomeMessage }
+					<LargeTitle className={styles.profileHeading}>
+						{Headings.WelcomeMessage}
 					</LargeTitle>
 				</div>
 
-				{/* USER DETAILS */ }
+				{/* USER DETAILS */}
 				<div className="row position-relative mt-4">
-					{ isUserDataLoading || !userStateData?.displayName ? (
+					{isUserDataLoading || !userStateData?.displayName ? (
 						<Skeleton
 							aria-label="Profile data loading"
 							as="div"
@@ -134,12 +134,12 @@ function ProfileComponent() {
 									animation="pulse"
 									as="div"
 									shape="circle"
-									className={ styles.userImgSkeleton }
+									className={styles.userImgSkeleton}
 								></SkeletonItem>
 							</div>
 							<div className="col-12 col-sm-10">
 								<SkeletonItem
-									className={ styles.userDataSkeleton }
+									className={styles.userDataSkeleton}
 									appearance="translucent"
 									animation="pulse"
 									as="div"
@@ -149,35 +149,35 @@ function ProfileComponent() {
 					) : (
 						<div className="row">
 							<div className="col-12 col-sm-2">
-								<div className={ styles.imageContainer }>
+								<div className={styles.imageContainer}>
 									<img
-										src={ AlienImage }
+										src={AlienImage}
 										alt="Profile"
-										className={ styles.profileImage }
+										className={styles.profileImage}
 									/>
 								</div>
 							</div>
 							<div className="col-12 col-sm-10">
-								<div className={ styles.userDetailsContainer }>
+								<div className={styles.userDetailsContainer}>
 									<UserDetailsComponent
-										displayName={ userStateData.displayName }
-										emailAddress={ userStateData.emailAddress }
-										userName={ userStateData.userName }
+										displayName={userStateData.displayName}
+										emailAddress={userStateData.emailAddress}
+										userName={userStateData.userName}
 									/>
 								</div>
 							</div>
 						</div>
-					) }
+					)}
 				</div>
 
-				{/* USER ACTIVITY */ }
+				{/* USER ACTIVITY */}
 				<div className="row position-relative mt-4">
-					{/* USER POSTS */ }
-					{ isUserDataLoading || !userStateData?.userPosts ? (
+					{/* USER POSTS */}
+					{isUserDataLoading || !userStateData?.userPosts ? (
 						<div className="col-12 col-sm-6">
 							<Skeleton>
 								<SkeletonItem
-									className={ styles.userDataSkeleton }
+									className={styles.userDataSkeleton}
 									appearance="translucent"
 									animation="pulse"
 									as="div"
@@ -186,14 +186,14 @@ function ProfileComponent() {
 						</div>
 					) : (
 						<div className="col-12 col-sm-6">
-							<div className={ styles.userPostsContainer }>
-								<UserPostsComponent userPosts={ userStateData.userPosts } />
+							<div className={styles.userPostsContainer}>
+								<UserPostsComponent userPosts={userStateData.userPosts} />
 							</div>
 						</div>
-					) }
+					)}
 
-					{/* USER RATINGS */ }
-					{ isUserDataLoading || !userStateData?.userPostRatings ? (
+					{/* USER RATINGS */}
+					{isUserDataLoading || !userStateData?.userPostRatings ? (
 						<div className="cl-12 col-sm-6">
 							<Skeleton
 								aria-label="Profile data loading"
@@ -204,19 +204,19 @@ function ProfileComponent() {
 									appearance="translucent"
 									animation="pulse"
 									as="div"
-									className={ styles.userImgSkeleton }
+									className={styles.userImgSkeleton}
 								></SkeletonItem>
 							</Skeleton>
 						</div>
 					) : (
 						<div className="col-12 col-sm-6">
-							<div className={ styles.userRatingsContainer }>
+							<div className={styles.userRatingsContainer}>
 								<UserRatingsComponent
-									userPostRatings={ userStateData.userPostRatings }
+									userPostRatings={userStateData.userPostRatings}
 								/>
 							</div>
 						</div>
-					) }
+					)}
 				</div>
 			</div>
 		</div>

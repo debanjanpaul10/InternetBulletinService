@@ -5,7 +5,7 @@
 // <summary>The User Posts and Ratings DTO.</summary>
 // *********************************************************************************
 
-namespace InternetBulletin.Shared.DTOs.Posts
+namespace InternetBulletin.Shared.DTOs.Users
 {
     /// <summary>
     /// The User Posts and Ratings DTO.

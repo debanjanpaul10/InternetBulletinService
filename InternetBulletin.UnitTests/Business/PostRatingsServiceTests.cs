@@ -7,15 +7,17 @@
 
 namespace InternetBulletin.UnitTests.Business
 {
+    using System;
+    using System.Threading.Tasks;
+    using InternetBulletin.Business.Contracts;
     using InternetBulletin.Business.Services;
     using InternetBulletin.Data.Contracts;
     using InternetBulletin.Data.Entities;
     using InternetBulletin.Shared.DTOs.Posts;
     using Microsoft.Extensions.Logging;
     using Moq;
-    using System;
-    using System.Threading.Tasks;
     using Xunit;
+    using static InternetBulletin.UnitTests.Helpers.TestsHelper;
 
     /// <summary>
     /// Post ratings service tests.
@@ -26,8 +28,6 @@ namespace InternetBulletin.UnitTests.Business
         /// The post id guid.
         /// </summary>
         private static readonly string PostIdGuid = Guid.NewGuid().ToString();
-
-        private static readonly string UserName = "user1234";
 
         /// <summary>
         /// The _logger mock.
@@ -45,7 +45,7 @@ namespace InternetBulletin.UnitTests.Business
         private readonly Mock<IPostsDataService> _postsDataServiceMock;
 
         /// <summary>
-        /// The _post ratings service.
+        /// The post ratings service.
         /// </summary>
         private readonly PostRatingsService _postRatingsService;
 
@@ -57,7 +57,9 @@ namespace InternetBulletin.UnitTests.Business
             this._loggerMock = new Mock<ILogger<PostRatingsService>>();
             this._postRatingsDataServiceMock = new Mock<IPostRatingsDataService>();
             this._postsDataServiceMock = new Mock<IPostsDataService>();
-            this._postRatingsService = new PostRatingsService(this._loggerMock.Object, this._postRatingsDataServiceMock.Object, this._postsDataServiceMock.Object);
+
+            this._postRatingsService = new PostRatingsService(
+                this._loggerMock.Object, this._postRatingsDataServiceMock.Object, this._postsDataServiceMock.Object);
         }
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace InternetBulletin.UnitTests.Business
         public async Task UpdateRatingAsync_FirstTimeRating_IncrementsRating()
         {
             // Arrange
-            var post = TestsHelper.PrepareNewPostDataDTO(PostIdGuid, 0);
+            var post = PrepareNewPostDataDTO(PostIdGuid, 0);
             PostRating nullPostRating = null!;
 
             this._postsDataServiceMock.Setup(x => x.GetPostAsync(It.IsAny<Guid>(), It.IsAny<string>(), false)).ReturnsAsync(post);
@@ -90,8 +92,8 @@ namespace InternetBulletin.UnitTests.Business
         public async Task UpdateRatingAsync_ExistingRatingZero_IncrementsRating()
         {
             // Arrange
-            var post = TestsHelper.PrepareNewPostDataDTO(PostIdGuid, 0);
-            var existingRating = TestsHelper.PrepareNewPostRatingDataDTO(PostIdGuid, 0);
+            var post = PrepareNewPostDataDTO(PostIdGuid, 0);
+            var existingRating = PrepareNewPostRatingDataDTO(PostIdGuid, 0);
 
             this._postsDataServiceMock.Setup(x => x.GetPostAsync(It.IsAny<Guid>(), It.IsAny<string>(), false)).ReturnsAsync(post);
             this._postRatingsDataServiceMock.Setup(x => x.GetPostRatingAsync(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(existingRating);
@@ -114,8 +116,8 @@ namespace InternetBulletin.UnitTests.Business
         {
             // Arrange
 
-            var post = TestsHelper.PrepareNewPostDataDTO(PostIdGuid, 1);
-            var existingRating = TestsHelper.PrepareNewPostRatingDataDTO(PostIdGuid, 1);
+            var post = PrepareNewPostDataDTO(PostIdGuid, 1);
+            var existingRating = PrepareNewPostRatingDataDTO(PostIdGuid, 1);
 
             this._postsDataServiceMock.Setup(x => x.GetPostAsync(It.IsAny<Guid>(), It.IsAny<string>(), false)).ReturnsAsync(post);
             this._postRatingsDataServiceMock.Setup(x => x.GetPostRatingAsync(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(existingRating);
@@ -163,7 +165,7 @@ namespace InternetBulletin.UnitTests.Business
         public async Task GetAllUserPostRatingsAsync_ReturnsUserRatings()
         {
             // Arrange
-            var expectedRatings = TestsHelper.PrepareAllPostRatingsForUserData(UserName);
+            var expectedRatings = PrepareAllPostRatingsForUserData(UserName);
             this._postRatingsDataServiceMock.Setup(x => x.GetAllUserPostRatingsAsync(It.IsAny<string>())).ReturnsAsync(expectedRatings);
 
             // Act
@@ -183,8 +185,8 @@ namespace InternetBulletin.UnitTests.Business
         public async Task UpdateRatingAsync_RatingNeverGoesBelowZero()
         {
             // Arrange
-            var post = TestsHelper.PrepareNewPostDataDTO(PostIdGuid, 0);
-            var existingRating = TestsHelper.PrepareNewPostRatingDataDTO(PostIdGuid, 1);
+            var post = PrepareNewPostDataDTO(PostIdGuid, 0);
+            var existingRating = PrepareNewPostRatingDataDTO(PostIdGuid, 1);
 
             this._postsDataServiceMock.Setup(x => x.GetPostAsync(It.IsAny<Guid>(), It.IsAny<string>(), false)).ReturnsAsync(post);
             this._postRatingsDataServiceMock.Setup(x => x.GetPostRatingAsync(It.IsAny<Guid>(), It.IsAny<string>())).ReturnsAsync(existingRating);

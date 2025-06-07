@@ -4,9 +4,9 @@ import { PageConstants } from "@helpers/ibbs.constants";
 /**
  * The Theme Context for the application
  */
-const ThemeContext = createContext( {
+const ThemeContext = createContext({
 	themeMode: PageConstants.LightConstant,
 	toggleThemeMode: () => { },
-} );
+});
 
 export default ThemeContext;

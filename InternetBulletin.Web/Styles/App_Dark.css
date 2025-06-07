@@ -27,15 +27,9 @@
 	background-color: #333333;
 	color: #ffffff;
 	border: 1px solid #555555;
-
 }
 
 .dark-mode .form-control::placeholder {
-	color: #bbbbbb;
-}
-
-.dark-mode .text-editor {
-	background-color: #ffffff;
 	color: #bbbbbb;
 }
 
@@ -111,12 +105,12 @@
 }
 
 .dark-mode .ql-toolbar .ql-aiRewrite:hover::after {
-    color: #333;
-    background-color: #fff;
+	color: #333;
+	background-color: #fff;
 }
 
 .dark-mode .custom-modal
 {
-    color: #fff;
-    background-color: #333; 
+	color: #fff;
+	background-color: #333; 
 }

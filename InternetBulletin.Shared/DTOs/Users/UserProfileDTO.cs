@@ -7,7 +7,6 @@
 
 namespace InternetBulletin.Shared.DTOs.Users
 {
-	using InternetBulletin.Shared.DTOs.Posts;
 
 	/// <summary>
 	/// The User Profile DTO.

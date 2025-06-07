@@ -13,17 +13,17 @@ import { useStyles } from "./styles";
  *
  * @returns {JSX.Element}
  */
-function Spinner( { isLoading } ) {
-	const { themeMode } = useContext( ThemeContext );
+function Spinner({ isLoading }) {
+	const { themeMode } = useContext(ThemeContext);
 	const styles = useStyles();
 	const spinnerStyles = themeMode === "dark" ? styles.spinnerPageDark : styles.spinnerPageLight;
 
 	return (
 		isLoading && (
-			<div className={ spinnerStyles }>
+			<div className={spinnerStyles}>
 				<img
-					src={ AppLogo }
-					height={ "100px" }
+					src={AppLogo}
+					height={"100px"}
 					className="heartbeat"
 					alt="Loading..."
 				/>

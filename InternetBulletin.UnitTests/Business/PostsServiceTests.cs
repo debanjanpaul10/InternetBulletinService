@@ -7,14 +7,7 @@
 
 namespace InternetBulletin.UnitTests.Business
 {
-    using InternetBulletin.Business.Services;
-    using InternetBulletin.Data.Contracts;
-    using InternetBulletin.Shared.DTOs.Posts;
-    using Microsoft.Extensions.Logging;
-    using Moq;
-    using System;
-    using System.Threading.Tasks;
-    using Xunit;
+    using static InternetBulletin.UnitTests.Helpers.TestsHelper;
 
     /// <summary>
     /// Posts service tests.
@@ -25,11 +18,6 @@ namespace InternetBulletin.UnitTests.Business
         /// The post id guid.
         /// </summary>
         private static readonly string PostIdGuid = Guid.NewGuid().ToString();
-
-        /// <summary>
-        /// The user name.
-        /// </summary>
-        private static readonly string UserName = "user12345";
 
         /// <summary>
         /// The logger mock.
@@ -44,7 +32,7 @@ namespace InternetBulletin.UnitTests.Business
         /// <summary>
         /// The post ratings data service mock.
         /// </summary>
-        private readonly Mock<IPostRatingsDataService> _postRatingsDataServiceMock;
+        private readonly Mock<IPostRatingsDataService> _postRatingsDataServiceMock;      
 
         /// <summary>
         /// The posts service.
@@ -69,7 +57,7 @@ namespace InternetBulletin.UnitTests.Business
         public async Task GetPostAsync_ValidPostId_ReturnsPost()
         {
             // Arrange
-            var expectedPost = TestsHelper.PrepareNewPostDataDTO(PostIdGuid, 0);
+            var expectedPost = PrepareNewPostDataDTO(PostIdGuid, 0);
             this._postsDataServiceMock.Setup(x => x.GetPostAsync(It.IsAny<Guid>(), It.IsAny<string>(), true)).ReturnsAsync(expectedPost);
 
             // Act
@@ -80,10 +68,10 @@ namespace InternetBulletin.UnitTests.Business
             Assert.Equal(expectedPost.PostId, result.PostId);
         }
 
-        [Fact]
         /// <summary>
         /// Gets post async invalid post id throws exception.
         /// </summary>
+        [Fact]
         public async Task GetPostAsync_InvalidPostId_ThrowsException()
         {
             // Arrange
@@ -95,14 +83,14 @@ namespace InternetBulletin.UnitTests.Business
                 this._postsService.GetPostAsync(invalidPostId, userName));
         }
 
-        [Fact]
         /// <summary>
         /// Adds new post async valid post returns true.
         /// </summary>
+        [Fact]
         public async Task AddNewPostAsync_ValidPost_ReturnsTrue()
         {
             // Arrange
-            var newPost = TestsHelper.PrepareNewAddPostDataDTO();
+            var newPost = PrepareNewAddPostDataDTO();
             this._postsDataServiceMock.Setup(x => x.AddNewPostAsync(It.IsAny<AddPostDTO>(), It.IsAny<string>())).ReturnsAsync(true);
 
             // Act
@@ -112,15 +100,15 @@ namespace InternetBulletin.UnitTests.Business
             Assert.True(result);
         }
 
-        [Fact]
         /// <summary>
         /// Updates post async valid post returns updated post.
         /// </summary>
+        [Fact]
         public async Task UpdatePostAsync_ValidPost_ReturnsUpdatedPost()
         {
             // Arrange
-            var updatedPost = TestsHelper.PrepareNewUpdatePostDataDTO(PostIdGuid);
-            var expectedPost = TestsHelper.PrepareNewPostDataDTO(PostIdGuid, 1);
+            var updatedPost = PrepareNewUpdatePostDataDTO(PostIdGuid);
+            var expectedPost = PrepareNewPostDataDTO(PostIdGuid, 1);
             this._postsDataServiceMock.Setup(x => x.UpdatePostAsync(It.IsAny<UpdatePostDTO>(), It.IsAny<string>(), false)).ReturnsAsync(expectedPost);
 
             // Act
@@ -131,10 +119,10 @@ namespace InternetBulletin.UnitTests.Business
             Assert.Equal(expectedPost.PostId, result.PostId);
         }
 
-        [Fact]
         /// <summary>
         /// Deletes post async valid post id returns true.
         /// </summary>
+        [Fact]
         public async Task DeletePostAsync_ValidPostId_ReturnsTrue()
         {
             // Arrange
@@ -154,7 +142,7 @@ namespace InternetBulletin.UnitTests.Business
         public async Task GetAllPostsAsync_WithUserName_ReturnsPostsWithRatings()
         {
             // Arrange
-            var expectedPosts = TestsHelper.PreparePostWithRatingsDTO();
+            var expectedPosts = PreparePostWithRatingsDTO();
             this._postRatingsDataServiceMock.Setup(x => x.GetAllPostsWithRatingsAsync(It.IsAny<string>())).ReturnsAsync(expectedPosts);
 
             // Act
@@ -173,7 +161,7 @@ namespace InternetBulletin.UnitTests.Business
         public async Task GetAllPostsAsync_WithoutUserName_ReturnsAllPosts()
         {
             // Arrange
-            var expectedPosts = TestsHelper.PreparePostsDataForUser();
+            var expectedPosts = PreparePostsDataForUser();
             this._postsDataServiceMock.Setup(x => x.GetAllPostsAsync()).ReturnsAsync(expectedPosts);
 
             // Act

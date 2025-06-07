@@ -1,6 +1,7 @@
 import React from "react";
-import { ErrorPageConstants } from "@helpers/ibbs.constants";
 import { LargeTitle } from "@fluentui/react-components";
+
+import { ErrorPageConstants } from "@helpers/ibbs.constants";
 import { useStyles } from "./styles";
 
 /**
@@ -16,8 +17,8 @@ function PageNotFound() {
 		<div className="container">
 			<div className="row">
 				<div className="col-sm-12 mt-5">
-					<LargeTitle className={ styles.notFoundHeader }>
-						{ ErrorPageConstants.PageNotFoundMessage }
+					<LargeTitle className={styles.notFoundHeader}>
+						{ErrorPageConstants.PageNotFoundMessage}
 					</LargeTitle>
 				</div>
 			</div>

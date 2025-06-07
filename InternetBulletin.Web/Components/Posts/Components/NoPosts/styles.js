@@ -1,6 +1,6 @@
 import { makeStyles } from "@fluentui/react-components";
 
-const useStyles = makeStyles( {
+const useStyles = makeStyles({
 	noPostsContainer: {
 		marginTop: "200px",
 		textAlign: "center",
@@ -15,6 +15,6 @@ const useStyles = makeStyles( {
 		justifyContent: "center",
 		alignItems: "center",
 	},
-} );
+});
 
 export { useStyles };

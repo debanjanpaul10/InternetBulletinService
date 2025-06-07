@@ -10,7 +10,7 @@ namespace InternetBulletin.Data.DataServices
     using InternetBulletin.Data.Contracts;
     using InternetBulletin.Data.Entities;
     using InternetBulletin.Shared.Constants;
-    using InternetBulletin.Shared.DTOs.Posts;
+    using InternetBulletin.Shared.DTOs.Users;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
 

@@ -12,41 +12,41 @@ import NoPostsContainer from "@components/Posts/Components/NoPosts";
  */
 function PostsContainer() {
 	const AllPostsStoreData = useSelector(
-		( state ) => state.PostsReducer.allPostsData
+		(state) => state.PostsReducer.allPostsData
 	);
 	const IsPostsDataLoading = useSelector(
-		( state ) => state.PostsReducer.isPostsDataLoading
+		(state) => state.PostsReducer.isPostsDataLoading
 	);
 
-	const [ allPosts, setAllPosts ] = useState( [] );
+	const [allPosts, setAllPosts] = useState([]);
 
-	useEffect( () => {
-		if ( allPosts !== AllPostsStoreData ) {
-			let sortedData = [ ...AllPostsStoreData ].sort(
-				( a, b ) =>
-					new Date( b.postCreatedDate ) - new Date( a.postCreatedDate )
+	useEffect(() => {
+		if (allPosts !== AllPostsStoreData) {
+			let sortedData = [...AllPostsStoreData].sort(
+				(a, b) =>
+					new Date(b.postCreatedDate) - new Date(a.postCreatedDate)
 			);
-			setAllPosts( sortedData );
+			setAllPosts(sortedData);
 		}
-	}, [ AllPostsStoreData ] );
+	}, [AllPostsStoreData]);
 
-	if ( IsPostsDataLoading ) {
+	if (IsPostsDataLoading) {
 		return <div className="container"></div>;
 	}
 
 	return (
 		<div className="container">
-			{ allPosts.length > 0 ? (
+			{allPosts.length > 0 ? (
 				<div className="row">
-					{ allPosts.map( ( post, index ) => (
-						<div className="col-md-6 mb-4" key={ index }>
-							<PostBody post={ post } />
+					{allPosts.map((post, index) => (
+						<div className="col-md-6 mb-4" key={index}>
+							<PostBody post={post} />
 						</div>
-					) ) }
+					))}
 				</div>
 			) : (
 				<NoPostsContainer />
-			) }
+			)}
 		</div>
 	);
 }

@@ -7,10 +7,13 @@
 
 namespace InternetBulletin.Shared.ExceptionHelpers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Internet bulletin exception helper.
     /// </summary>
-    public class InternetBulletinBusinessException : Exception
+    [ExcludeFromCodeCoverage]
+    public class InternetBulletinBusinessException
     {
         /// <summary>
         /// Gets or sets the status code.
@@ -36,29 +39,6 @@ namespace InternetBulletin.Shared.ExceptionHelpers
         /// </value>
         public string? Details { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InternetBulletinBusinessException"/> class.
-        /// </summary>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="details">The details.</param>
-        public InternetBulletinBusinessException(string? message) : base(message)
-        {
-            this.ExceptionMessage = message;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InternetBulletinBusinessException"/> class.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="statusCode">The status code.</param>
-        /// <param name="details">The details.</param>
-        public InternetBulletinBusinessException(string? message, int statusCode, string? details) : base(message)
-        {
-            this.ExceptionMessage = message;
-            this.StatusCode = statusCode;
-            this.Details = details;
-        }
     }
 }
 

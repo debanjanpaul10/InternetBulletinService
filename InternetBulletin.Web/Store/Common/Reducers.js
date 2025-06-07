@@ -1,5 +1,7 @@
 import {
+	GET_APPLICATION_INFORMATION,
 	GET_CONFIGURATION_VALUE,
+	TOGGLE_ABOUT_US_SPINNER,
 	TOGGLE_ERROR_TOASTER,
 	TOGGLE_SIDE_BAR_STATUS,
 	TOGGLE_SUCCESS_TOASTER,
@@ -10,6 +12,8 @@ const initialState = {
 	successToaster: {},
 	errorToaster: {},
 	isSideBarOpen: false,
+	applicationInformation: {},
+	isAboutUsLoading: true,
 };
 
 /**
@@ -18,8 +22,8 @@ const initialState = {
  * @param {Object} action The action data.
  * @returns {Object} The updated redux store object.
  */
-const CommonReducer = ( state = initialState, action ) => {
-	switch ( action.type ) {
+const CommonReducer = (state = initialState, action) => {
+	switch (action.type) {
 		case GET_CONFIGURATION_VALUE: {
 			return {
 				...state,
@@ -43,6 +47,18 @@ const CommonReducer = ( state = initialState, action ) => {
 				...state,
 				isSideBarOpen: action.payload,
 			};
+		}
+		case GET_APPLICATION_INFORMATION: {
+			return {
+				...state,
+				applicationInformation: action.payload,
+			}
+		}
+		case TOGGLE_ABOUT_US_SPINNER: {
+			return {
+				...state,
+				isAboutUsLoading: action.payload,
+			}
 		}
 		default: {
 			return state;

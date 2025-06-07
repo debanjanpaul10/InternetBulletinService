@@ -12,8 +12,6 @@ namespace InternetBulletin.Shared.Constants
 	/// </summary>
 	public static class DatabaseConstants
 	{
-		#region Data Type Constants
-
 		/// <summary>
 		/// The integer data type constant
 		/// </summary>
@@ -39,58 +37,10 @@ namespace InternetBulletin.Shared.Constants
 		/// </summary>
 		public const string DateTimeDataTypeConstant = "datetime";
 
-		#endregion
-
-		#region Users
-
 		/// <summary>
 		/// The users table constant
 		/// </summary>
 		public const string UsersTableConstant = "Users";
-
-		/// <summary>
-		/// The primary key users constant
-		/// </summary>
-		public const string PrimaryKeyUsersConstant = "PK_Users";
-
-		/// <summary>
-		/// The user identifier constant
-		/// </summary>
-		public const string UserIdConstant = "UserId";
-
-		/// <summary>
-		/// The name constant
-		/// </summary>
-		public const string NameConstant = "Name";
-
-		/// <summary>
-		/// The user email constant
-		/// </summary>
-		public const string UserEmailConstant = "UserEmail";
-
-		/// <summary>
-		/// The user alias constant
-		/// </summary>
-		public const string UserAliasConstant = "UserAlias";
-
-		/// <summary>
-		/// The user password constant
-		/// </summary>
-		public const string UserPasswordConstant = "UserPassword";
-
-		/// <summary>
-		/// The is active constant
-		/// </summary>
-		public const string IsActiveConstant = "IsActive";
-
-		/// <summary>
-		/// The is admin constant
-		/// </summary>
-		public const string IsAdminConstant = "IsAdmin";
-
-		#endregion
-
-		#region Posts
 
 		/// <summary>
 		/// The posts table constant.
@@ -103,44 +53,13 @@ namespace InternetBulletin.Shared.Constants
 		public const string PrimaryKeyPostsConstant = "PK_Posts";
 
 		/// <summary>
-		/// The post id constant.
-		/// </summary>
-		public const string PostIdConstant = "PostId";
-
-		/// <summary>
-		/// The post title constant.
-		/// </summary>
-		public const string PostTitleConstant = "PostTitle";
-
-		/// <summary>
-		/// The post content constant.
-		/// </summary>
-		public const string PostContentConstant = "PostContent";
-
-		/// <summary>
-		/// The post created date constant.
-		/// </summary>
-		public const string PostCreatedDateConstant = "PostCreatedDate";
-
-		/// <summary>
-		/// The post owner user name constant.
-		/// </summary>
-		public const string PostOwnerUserNameConstant = "PostOwnerUserName";
-
-		/// <summary>
-		/// The rating constant.
-		/// </summary>
-		public const string RatingConstant = "Ratings";
-
-		#endregion
-
-		#region PostRatings
-
-		/// <summary>
 		/// The post ratings table name constant.
 		/// </summary>
 		public const string PostRatingsTableNameConstant = "PostRatings";
 
-		#endregion
+		/// <summary>
+		/// The AI Usages table name constant.
+		/// </summary>
+		public const string AiUsagesTableNameConstant = "AiUsages";
 	}
 }

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { PanelLeft32Filled } from "@fluentui/react-icons";
+import { useNavigate } from "react-router-dom";
+import { Lightbulb48Regular, LightbulbFilament48Regular, PanelLeftExpand28Regular } from "@fluentui/react-icons";
 import { useDispatch } from "react-redux";
 import {
 	Button,
@@ -38,7 +38,7 @@ import DarkModeIcon from "@assets/Images/light-bulb-off.png";
  * @returns {JSX.Element} A navigation bar containing the application header elements
  */
 function HeaderComponent() {
-	const { themeMode, toggleThemeMode } = useContext( ThemeContext );
+	const { themeMode, toggleThemeMode } = useContext(ThemeContext);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const styles = useStyles();
@@ -50,56 +50,56 @@ function HeaderComponent() {
 	 * Handles the home page redirection.
 	 */
 	const handleHomePageRedirect = () => {
-		navigate( Headings.Home.Link );
+		navigate(Headings.Home.Link);
 	};
 
 	/**
 	 * Toggles the side car.
 	 */
 	const toggleSideBar = () => {
-		dispatch( ToggleSideBar( true ) );
+		dispatch(ToggleSideBar(true));
 	};
 
 	return (
-		<nav className={ styles.navbar }>
-			<div className={ styles.navContent }>
-				{/* SIDE BAR */ }
+		<nav className={styles.navbar}>
+			<div className={styles.navContent}>
+				{/* SIDE BAR */}
 				<div className="navbar-nav mr-auto">
 					<Tooltip
-						content={ ButtonTitles.SideDrawer }
+						content={ButtonTitles.SideDrawer}
 						relationship="label"
-						position="after"
+						positioning="after"
 					>
 						<Button
 							appearance="subtle"
-							className={ styles.sideBarButton }
-							onClick={ toggleSideBar }
-							{ ...restoreFocusTargetAttributes }
+							className={styles.sideBarButton}
+							onClick={toggleSideBar}
+							{...restoreFocusTargetAttributes}
 						>
-							<PanelLeft32Filled />
+							<PanelLeftExpand28Regular />
 						</Button>
 					</Tooltip>
 				</div>
 
-				{/* IBBS LOGO */ }
+				{/* IBBS LOGO */}
 				<div className="navbar-nav mx-auto">
 					<Tooltip
-						content={ ButtonTitles.HomeButton }
+						content={ButtonTitles.HomeButton}
 						relationship="label"
 					>
 						<Button
-							onClick={ handleHomePageRedirect }
-							className={ styles.homeButton }
+							onClick={handleHomePageRedirect}
+							className={styles.homeButton}
 							appearance="subtle"
 						>
-							<img src={ AppLogo } height={ "30px" } />
-							&nbsp; { HomePageConstants.Headings.IBBS }
+							<img src={AppLogo} height={"30px"} />
+							&nbsp; {HomePageConstants.Headings.IBBS}
 						</Button>
 					</Tooltip>
 				</div>
 
 				<div className="navbar-nav ml-auto">
-					{/* TOGGLE THEME BUTTON */ }
+					{/* TOGGLE THEME BUTTON */}
 					<div className="mr-3 pr-2">
 						<Tooltip
 							content={
@@ -110,23 +110,15 @@ function HeaderComponent() {
 							relationship="label"
 						>
 							<Button
-								className={ styles.themeToggleButton }
-								onClick={ toggleThemeMode }
+								className={styles.themeToggleButton}
+								onClick={toggleThemeMode}
 								appearance="transparent"
 							>
-								{ themeMode === PageConstants.LightConstant ? (
-									<img
-										src={ DarkModeIcon }
-										width={ 40 }
-										height={ 35 }
-									/>
+								{themeMode === PageConstants.LightConstant ? (
+									<Lightbulb48Regular height={40} width={35} />
 								) : (
-									<img
-										src={ LightModeIcon }
-										width={ 40 }
-										height={ 35 }
-									/>
-								) }
+									<LightbulbFilament48Regular height={40} width={35} />
+								)}
 							</Button>
 						</Tooltip>
 					</div>

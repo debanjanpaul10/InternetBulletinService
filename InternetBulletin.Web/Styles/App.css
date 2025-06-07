@@ -17,10 +17,12 @@ code {
 /* ANIMATIONS START */
 
 @keyframes heartbeat {
+
 	0%,
 	100% {
 		transform: scale(1);
 	}
+
 	50% {
 		transform: scale(1.2);
 	}
@@ -31,7 +33,8 @@ code {
 }
 
 .icon-large {
-	font-size: 1.5em; /* Adjust the size as needed */
+	font-size: 1.5em;
+	/* Adjust the size as needed */
 	transition: transform 0.3s ease-in-out;
 }
 
@@ -60,12 +63,15 @@ code {
 li {
 	list-style: none;
 }
+
 a {
 	text-decoration: none;
 }
+
 input {
 	margin-top: 20px;
 }
+
 button {
 	margin-top: 20px;
 }
@@ -96,7 +102,7 @@ button {
 	margin-left: auto;
 }
 
-.ml-right > .nav-link {
+.ml-right>.nav-link {
 	margin-right: 10px;
 }
 
@@ -194,14 +200,14 @@ button {
 }
 
 /* Add padding at the bottom of the main content */
-.main-content > *:last-child {
+.main-content>*:last-child {
 	margin-bottom: 2rem;
 }
 
 /* Add responsive padding for small devices */
 @media screen and (max-width: 768px) {
-	
-	.main-content > *:last-child {
+
+	.main-content>*:last-child {
 		margin-bottom: 3rem;
 	}
 }

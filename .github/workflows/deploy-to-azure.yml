@@ -1,197 +1,201 @@
 name: Build and Deploy InternetBulletin
 
 env:
-    API_PROJECT_PATH: InternetBulletin.API/InternetBulletin.API.csproj
-    WEB_PROJECT_PATH: InternetBulletin.Web
-    DATABASE_PROJECT_PATH: InternetBulletin.Database/InternetBulletin.Database.sqlproj
-    FUNCTION_PROJECT_PATH: InternetBulletin.Functions/InternetBulletin.Functions.csproj
+  API_PROJECT_PATH: InternetBulletin.API/InternetBulletin.API.csproj
+  WEB_PROJECT_PATH: InternetBulletin.Web
+  DATABASE_PROJECT_PATH: InternetBulletin.Database/InternetBulletin.Database.sqlproj
+  FUNCTION_PROJECT_PATH: InternetBulletin.Functions/InternetBulletin.Functions.csproj
 
 on:
-    workflow_dispatch:
-        inputs:
-            deploy_api:
-                description: "InternetBulletin.API"
-                required: false
-                default: false
-                type: boolean
+  workflow_dispatch:
+    inputs:
+      deploy_api:
+        description: "InternetBulletin.API"
+        required: false
+        default: false
+        type: boolean
 
-            deploy_web:
-                description: "InternetBulletin.Web"
-                required: false
-                default: false
-                type: boolean
+      deploy_web:
+        description: "InternetBulletin.Web"
+        required: false
+        default: false
+        type: boolean
 
-            deploy_database:
-                description: "InternetBulletin.Database"
-                required: false
-                default: false
-                type: boolean
+      deploy_database:
+        description: "InternetBulletin.Database"
+        required: false
+        default: false
+        type: boolean
 
-            deploy_function:
-                description: "InternetBulletin.Functions"
-                required: false
-                default: false
-                type: boolean
+      deploy_function:
+        description: "InternetBulletin.Functions"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
-    #region API
+  #region API
 
-    build-and-deploy-api:
-        name: Build and Deploy InternetBulletin.API
-        if: ${{ inputs.deploy_api }}
-        runs-on: ubuntu-latest
+  build-and-deploy-api:
+    name: Build and Deploy InternetBulletin.API
+    if: ${{ inputs.deploy_api }}
+    runs-on: ubuntu-latest
+    environment: Production
 
-        steps:
-            # Checkout the repository
-            - name: Checkout code
-              uses: actions/checkout@v3
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-            # Setup .NET
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v3
-              with:
-                  dotnet-version: "9.0.x"
+      # Setup .NET
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "9.0.x"
 
-            # Install dependencies
-            - name: Install dependencies and Build solution
-              run: |
-                  dotnet restore ${{ env.API_PROJECT_PATH }}
-                  dotnet build ${{ env.API_PROJECT_PATH }} --configuration Release --no-restore
+      # Install dependencies
+      - name: Install dependencies and Build solution
+        run: |
+          dotnet restore ${{ env.API_PROJECT_PATH }}
+          dotnet build ${{ env.API_PROJECT_PATH }} --configuration Release --no-restore
 
-            # Publish the project to a folder
-            - name: Publish the project
-              run: |
-                  dotnet publish ${{ env.API_PROJECT_PATH }} --configuration Release --output ./publish-api
+      # Publish the project to a folder
+      - name: Publish the project
+        run: |
+          dotnet publish ${{ env.API_PROJECT_PATH }} --configuration Release --no-build --output ./publish-api
 
-            # Deploy to Azure App Service
-            - name: Deploy to Azure App Service
-              uses: Azure/webapps-deploy@v2
-              with:
-                  app-name: app-webapi-internet-bulletin
-                  slot-name: production
-                  publish-profile: ${{ secrets.AZURE_IBBS_API_PUBLISH_PROFILE }}
-                  package: ./publish-api
+      # Deploy to Azure App Service
+      - name: Deploy to Azure App Service
+        uses: Azure/webapps-deploy@v2
+        with:
+          app-name: app-webapi-internet-bulletin
+          slot-name: production
+          publish-profile: ${{ secrets.AZURE_IBBS_API_PUBLISH_PROFILE }}
+          package: ./publish-api
 
-    #endregion
+  #endregion
 
-    #region WEB
+  #region WEB
 
-    build-and-deploy-web:
-        name: Build and Deploy InternetBulletin.Web
-        if: ${{ inputs.deploy_web }}
-        runs-on: ubuntu-latest
+  build-and-deploy-web:
+    name: Build and Deploy InternetBulletin.Web
+    if: ${{ inputs.deploy_web }}
+    runs-on: ubuntu-latest
+    environment: Production
 
-        steps:
-            # Checkout the repository
-            - name: Checkout code
-              uses: actions/checkout@v3
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-            # Setup Node.js
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: "18.x"
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
 
-            # Install dependencies and build React-vite project
-            - name: Install dependencies and build web
-              run: |
-                  cd ${{ env.WEB_PROJECT_PATH }}
-                  npm install
-                  npm run build
+      # Install dependencies and build React-vite project
+      - name: Install dependencies and build web
+        run: |
+          cd ${{ env.WEB_PROJECT_PATH }}
+          npm install
+          npm run build
 
-            # Deploy the React-Vite project to Azure Web App
-            - name: Deploy Web to Azure Static Web App
-              uses: Azure/static-web-apps-deploy@v1
-              with:
-                  azure_static_web_apps_api_token: ${{ secrets.AZURE_IBBS_WEB_DEPLOYMENT_SECRET }}
-                  action: "upload"
-                  app_location: ${{ env.WEB_PROJECT_PATH }}
-                  output_location: "dist"
+        # Deploy the React-Vite project to Azure Web App
+      - name: Deploy Web to Azure Static Web App
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_IBBS_WEB_DEPLOYMENT_SECRET }}
+          action: "upload"
+          app_location: ${{ env.WEB_PROJECT_PATH }}
+          output_location: "dist"
 
-    #endregion
+  #endregion
 
-    #region Database
+  #region Database
 
-    build-and-deploy-database:
-        name: Build and Deploy InternetBulletin.Database
-        if: ${{ inputs.deploy_database }}
-        runs-on: windows-latest
+  build-and-deploy-database:
+    name: Build and Deploy InternetBulletin.Database
+    if: ${{ inputs.deploy_database }}
+    runs-on: windows-latest
+    environment: Production
 
-        steps:
-            # Checkout the repository
-            - name: Checkout code
-              uses: actions/checkout@v3
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-            # Azure Login
-            - name: Azure Login
-              uses: azure/login@v1
-              with:
-                  creds: ${{ secrets.AZURE_DB_SECRET }}
+      # Azure Login
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_DB_SECRET }}
 
-            # Setup .NET
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v3
-              with:
-                  dotnet-version: "9.0.x"
+      # Setup .NET
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "9.0.x"
 
-            # Install dependencies
-            - name: Install dependencies and Build solution
-              run: |
-                  dotnet restore ${{ env.DATABASE_PROJECT_PATH }}
-                  dotnet build ${{ env.DATABASE_PROJECT_PATH }} --configuration Release --no-restore
+      # Install dependencies
+      - name: Install dependencies and Build solution
+        run: |
+          dotnet restore ${{ env.DATABASE_PROJECT_PATH }}
+          dotnet build ${{ env.DATABASE_PROJECT_PATH }} --configuration Release --no-restore
 
-            # Publish the project to a folder
-            - name: Publish the project
-              run: |
-                  dotnet publish ${{ env.DATABASE_PROJECT_PATH }} --configuration Release --output ./publish-db
+      # Publish the project to a folder
+      - name: Publish the project
+        run: |
+          dotnet publish ${{ env.DATABASE_PROJECT_PATH }} --configuration Release --output ./publish-db
 
-            # Deploy to Azure SQL Server
-            - name: Deploy to Azure SQL Server
-              uses: azure/sql-action@v2.3
-              with:
-                  connection-string: ${{ secrets.AZURE_DB_CONNECTION_STRING }}
-                  path: "./publish-db/InternetBulletin.Database.dacpac"
-                  action: "publish"
-                  arguments: "/p:DropObjectsNotInSource=true"
+      # Deploy to Azure SQL Server
+      - name: Deploy to Azure SQL Server
+        uses: azure/sql-action@v2.3
+        with:
+          connection-string: ${{ secrets.AZURE_DB_CONNECTION_STRING }}
+          path: "./publish-db/InternetBulletin.Database.dacpac"
+          action: "publish"
+          arguments: "/p:DropObjectsNotInSource=true"
 
-    #endregion
+  #endregion
 
-    #region Azure Function
+  #region Azure Function
 
-    build-and-deploy-function:
-        name: Build and Deploy InternetBulletin.Functions
-        if: ${{inputs.deploy_function}}
-        runs-on: ubuntu-latest
+  build-and-deploy-function:
+    name: Build and Deploy InternetBulletin.Functions
+    if: ${{inputs.deploy_function}}
+    runs-on: ubuntu-latest
+    environment: Production
 
-        steps:
-            # Checkout the repository
-            - name: Checkout code
-              uses: actions/checkout@v4
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-            # Setup .NET
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v3
-              with:
-                  dotnet-version: "9.0.x"
+      # Setup .NET
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "9.0.x"
 
-            # Install dependencies
-            - name: Install dependencies and Build solution
-              run: |
-                  dotnet restore ${{ env.FUNCTION_PROJECT_PATH }}
-                  dotnet build ${{ env.FUNCTION_PROJECT_PATH }} --configuration Release --no-restore
+      # Install dependencies
+      - name: Install dependencies and Build solution
+        run: |
+          dotnet restore ${{ env.FUNCTION_PROJECT_PATH }}
+          dotnet build ${{ env.FUNCTION_PROJECT_PATH }} --configuration Release --no-restore
 
-            # Publish the project to a folder
-            - name: Publish the project
-              run: |
-                  dotnet publish ${{ env.FUNCTION_PROJECT_PATH }} --configuration Release --output ./publish-function
+      # Publish the project to a folder
+      - name: Publish the project
+        run: |
+          dotnet publish ${{ env.FUNCTION_PROJECT_PATH }} --configuration Release --no-build --output ./publish-function
 
-            # Run Azure Functions action
-            - name: Run Azure Functions action
-              uses: Azure/functions-action@v1
-              with:
-                  app-name: func-internet-bulletin
-                  package: ./publish-function
-                  sku: "flexconsumption"
-                  publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+      # Run Azure Functions action
+      - name: Run Azure Functions action
+        uses: Azure/functions-action@v1
+        with:
+          app-name: func-internet-bulletin
+          package: ./publish-function
+          sku: "flexconsumption"
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
 
-    #endregion
+  #endregion

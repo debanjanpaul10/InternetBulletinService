@@ -20,7 +20,7 @@ class UserProfileDtoModel {
 	 * @param {string} UserName The user identifier.
 	 * @param {Array<Object>} UserPosts The user posts.
 	 */
-	constructor ( UserName, UserPosts ) {
+	constructor(UserName, UserPosts) {
 		this.userName = UserName;
 		this.userPosts = UserPosts;
 	}

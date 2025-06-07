@@ -7,12 +7,19 @@
 
 namespace InternetBulletin.Shared.Helpers
 {
+    using System.Diagnostics.CodeAnalysis;
+    using Azure.Identity;
     using InternetBulletin.Shared.Constants;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Graph;
+    using Microsoft.Graph.Models;
+    using static InternetBulletin.Shared.Constants.ConfigurationConstants;
 
     /// <summary>
     /// Common utilities.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class CommonUtilities
     {
         /// <summary>
@@ -64,6 +71,58 @@ namespace InternetBulletin.Shared.Helpers
             }
 
             return postGuid;
+        }
+
+        /// <summary>
+        /// Gets graph api data async.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="logger">The logger.</param>
+        /// <returns>The user collection response data.</returns>
+        /// <exception cref="Exception">Exception error.</exception>
+        public static async Task<UserCollectionResponse> GetGraphApiDataAsync(IConfiguration configuration, ILogger logger)
+        {
+            try
+            {
+                logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodEnded, nameof(GetGraphApiDataAsync), DateTime.UtcNow, string.Empty));
+
+                var scopes = new[] { configuration[GraphAPIDefaultScopeConstant] };
+                var tenantId = configuration[TenantIdConstant];
+                var clientId = configuration[GraphAPIClientIdConstant];
+                var clientSecret = configuration[GraphAPIClientSecretConstant];
+
+                var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+                var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+                // Get all users and filter by the custom username field
+                var users = await graphClient.Users
+                    .GetAsync(requestConfiguration =>
+                    {
+                        requestConfiguration.QueryParameters.Select = [
+                            IbbsConstants.IdConstant,
+                            IbbsConstants.DisplayNameConstant,
+                            IbbsConstants.IdentitiesConstant,
+                            IbbsConstants.UserNameExtensionConstant
+                        ];
+                    });
+
+                if (users is not null)
+                {
+                    return users;
+                }
+
+                throw new Exception(ExceptionConstants.UserDoesNotExistsMessageConstant);
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodFailed, nameof(GetGraphApiDataAsync), DateTime.UtcNow, ex.Message));
+                throw;
+            }
+            finally
+            {
+                logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodEnded, nameof(GetGraphApiDataAsync), DateTime.UtcNow, string.Empty));
+            }
         }
 
     }

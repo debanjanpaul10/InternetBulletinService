@@ -8,43 +8,17 @@
 namespace InternetBulletin.Data
 {
 	using InternetBulletin.Data.Entities;
-	using InternetBulletin.Shared.Constants;
 	using Microsoft.EntityFrameworkCore;
-	using Microsoft.Extensions.Configuration;
 	using static InternetBulletin.Shared.Constants.DatabaseConstants;
 
 	/// <summary>
 	/// The SQL DB Context Class.
 	/// </summary>
+	/// <param name="configuration">The configuration.</param>
+	/// <param name="options">The db context options.</param>
 	/// <seealso cref="Microsoft.EntityFrameworkCore.DbContext" />
-	public class SqlDbContext : DbContext
+	public class SqlDbContext(DbContextOptions<SqlDbContext> options) : DbContext(options)
 	{
-		/// <summary>
-		/// The configuration
-		/// </summary>
-		private readonly IConfiguration _configuration;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SqlDbContext"/> class.
-		/// </summary>
-		/// <remarks>
-		/// See <see href="https://aka.ms/efcore-docs-dbcontext">DbContext lifetime, configuration, and initialization</see>
-		/// for more information and examples.
-		/// </remarks>
-		public SqlDbContext()
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SqlDbContext"/> class.
-		/// </summary>
-		/// <param name="options">The options.</param>
-		/// <param name="configuration">The Configuration.</param>
-		public SqlDbContext(DbContextOptions<SqlDbContext> options, IConfiguration configuration) : base(options)
-		{
-			this._configuration = configuration;
-		}
-
 		/// <summary>
 		/// Gets or sets the users.
 		/// </summary>
@@ -70,27 +44,12 @@ namespace InternetBulletin.Data
 		public DbSet<PostRating> PostRatings { get; set; }
 
 		/// <summary>
-		/// Override this method to configure the database (and other options) to be used for this context.
-		/// This method is called for each instance of the context that is created.
-		/// The base implementation does nothing.
+		/// Gets or sets the AI usages.
 		/// </summary>
-		/// <param name="optionsBuilder">A builder used to create or modify options for this context. Databases (and other extensions)
-		/// typically define extension methods on this object that allow you to configure the context.</param>
-		/// <remarks>
-		/// <para>
-		/// In situations where an instance of <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptions" /> may or may not have been passed
-		/// to the constructor, you can use <see cref="P:Microsoft.EntityFrameworkCore.DbContextOptionsBuilder.IsConfigured" /> to determine if
-		/// the options have already been set, and skip some or all of the logic in
-		/// <see cref="M:Microsoft.EntityFrameworkCore.DbContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)" />.
-		/// </para>
-		/// <para>
-		/// See <see href="https://aka.ms/efcore-docs-dbcontext">DbContext lifetime, configuration, and initialization</see>
-		/// for more information and examples.
-		/// </para>
-		/// </remarks>
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-		}
+		/// <value>
+		/// The usage details.
+		/// </value>
+		public DbSet<AiUsage> AiUsages { get; set; }
 
 		/// <summary>
 		/// Override this method to further configure the model that was discovered by convention from the entity types
@@ -145,14 +104,25 @@ namespace InternetBulletin.Data
 			{
 				entity.ToTable(PostRatingsTableNameConstant);
 				entity.HasKey(e => e.PostRatingId);
-				entity.Property(e => e.PostRatingId)
-					.HasColumnType(IntegerDataTypeConstant)
-					.UseIdentityColumn()  // This enables auto-increment
-					.IsRequired();
+				entity.Property(e => e.PostRatingId).HasColumnType(IntegerDataTypeConstant).UseIdentityColumn().IsRequired();
 				entity.Property(e => e.PostId).HasColumnType(UniqueIdentifierDataTypeConstant).IsRequired();
 				entity.Property(e => e.UserName).HasColumnType(NVarCharMaxDataTypeConstant).IsRequired();
 				entity.Property(e => e.RatedOn).HasColumnType(DateTimeDataTypeConstant).IsRequired();
 				entity.Property(e => e.RatingValue).HasColumnType(IntegerDataTypeConstant).IsRequired();
+				entity.Property(e => e.IsActive).HasColumnType(BitDataTypeConstant).HasDefaultValue(1).IsRequired();
+			});
+
+			modelBuilder.Entity<AiUsage>(entity =>
+			{
+				entity.ToTable(AiUsagesTableNameConstant);
+				entity.HasKey(e => e.Id);
+				entity.Property(e => e.Id).HasColumnType(IntegerDataTypeConstant).UseIdentityColumn().IsRequired();
+				entity.Property(e => e.UserName).HasColumnType(NVarCharMaxDataTypeConstant).IsRequired();
+				entity.Property(e => e.Usage).HasColumnType(NVarCharMaxDataTypeConstant).IsRequired();
+				entity.Property(e => e.UsageTime).HasColumnType(DateTimeDataTypeConstant).IsRequired();
+				entity.Property(e => e.TotalTokensConsumed).HasColumnType(IntegerDataTypeConstant);
+				entity.Property(e => e.CandidatesTokenCount).HasColumnType(IntegerDataTypeConstant);
+				entity.Property(e => e.PromptTokenCount).HasColumnType(IntegerDataTypeConstant);
 				entity.Property(e => e.IsActive).HasColumnType(BitDataTypeConstant).HasDefaultValue(1).IsRequired();
 			});
 		}

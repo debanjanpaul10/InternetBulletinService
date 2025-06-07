@@ -33,7 +33,7 @@ class UpdatePostDtoModel {
      * @param {string} PostContent The content of the post.
      * @param {number} PostRating The post rating.
      */
-    constructor ( PostId, PostTitle, PostContent, PostRating ) {
+    constructor(PostId, PostTitle, PostContent, PostRating) {
         this.postId = PostId;
         this.postTitle = PostTitle;
         this.postContent = PostContent;

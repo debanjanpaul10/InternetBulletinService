@@ -17,7 +17,7 @@ class UserLoginDtoModel {
 	 * @param {string} UserEmail The user email.
 	 * @param {string} UserPassword The user password.
 	 */
-	constructor ( UserEmail, UserPassword ) {
+	constructor(UserEmail, UserPassword) {
 		this.userEmail = UserEmail;
 		this.userPassword = UserPassword;
 	}

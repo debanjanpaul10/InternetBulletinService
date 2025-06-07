@@ -7,8 +7,6 @@
 
 namespace InternetBulletin.Shared.DTOs
 {
-	using System.Net;
-
 	/// <summary>
 	/// The Response DTO.
 	/// </summary>
@@ -36,6 +34,6 @@ namespace InternetBulletin.Shared.DTOs
 		/// <value>
 		/// The data.
 		/// </value>
-		public object Data { get; set; }
+		public object Data { get; set; } = default!;
 	}
 }

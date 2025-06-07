@@ -18,23 +18,23 @@ class HttpUtility {
 	 *
 	 * @returns {Promise} The promise of the api response.
 	 */
-	static GetAsync = async ( apiUrl, accessToken ) => {
+	static GetAsync = async (apiUrl, accessToken) => {
 		try {
 			const url = this.WebApiEndpoint + apiUrl;
-
-			const response = await axios.get( url, {
+			const response = await axios.get(url, {
 				headers: {
-					Authorization: `Bearer ${ accessToken }`,
+					Authorization: `Bearer ${accessToken}`,
 				},
-			} );
+			});
 
-			if ( response !== null || response.data !== "" ) {
+			if (response !== null || response.data !== "") {
 				return response.data;
 			}
 
 			return "";
-		} catch ( error ) {
-			console.error( error );
+		}
+		catch (error) {
+			console.error(error);
 			return Promise.reject(
 				error.response ? error.response.data : error.message
 			);
@@ -49,47 +49,22 @@ class HttpUtility {
 	 *
 	 * @returns {Promise} The promise of the api response.
 	 */
-	static PostAsync = async ( apiUrl, data, accessToken ) => {
+	static PostAsync = async (apiUrl, data, accessToken) => {
 		try {
 			const url = this.WebApiEndpoint + apiUrl;
 
-			const response = await axios.post( url, data, {
+			const response = await axios.post(url, data, {
 				headers: {
-					Authorization: `Bearer ${ accessToken }`,
+					Authorization: `Bearer ${accessToken}`,
 				},
-			} );
+			});
 
-			if ( response !== null || response.data !== "" ) {
+			if (response !== null || response.data !== "") {
 				return response.data;
 			}
-		} catch ( error ) {
-			console.error( error );
-			return Promise.reject(
-				error.response ? error.response.data : error.message
-			);
 		}
-	};
-
-	/**
-	 * The Post AI data function.
-	 * @param {Object} data The post data object.
-	 * @returns {Promise} The promise of the api response.
-	 */
-	static PostAIAsync = async ( data ) => {
-		try {
-			var webEndpoint =
-				process.env.NODE_ENV == "development"
-					? UrlConstants.LocalHostUrl
-					: UrlConstants.AppWebUrl;
-
-			const url = webEndpoint + UrlConstants.AiRewriteUrl;
-
-			const response = await axios.post( url, data );
-			if ( response !== null || response.data !== "" ) {
-				return response.data;
-			}
-		} catch ( error ) {
-			console.error( error );
+		catch (error) {
+			console.error(error);
 			return Promise.reject(
 				error.response ? error.response.data : error.message
 			);

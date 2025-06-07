@@ -7,7 +7,7 @@ import {
 /*
  * Create a custom DrawerMotion component that animates the drawer surface.
  */
-const DrawerMotion = createPresenceComponent( () => {
+const DrawerMotion = createPresenceComponent(() => {
 	const keyframes = [
 		{
 			opacity: 0,
@@ -34,11 +34,11 @@ const DrawerMotion = createPresenceComponent( () => {
 			easing: motionTokens.curveDecelerateMin,
 		},
 		exit: {
-			keyframes: [ ...keyframes ].reverse(),
+			keyframes: [...keyframes].reverse(),
 			duration: motionTokens.durationSlow,
 			easing: motionTokens.curveAccelerateMin,
 		},
 	};
-} );
+});
 
 export { DrawerMotion };

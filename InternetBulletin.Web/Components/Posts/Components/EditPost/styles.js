@@ -1,6 +1,6 @@
 import { makeStyles, tokens } from "@fluentui/react-components";
 
-const useStyles = makeStyles( {
+const useStyles = makeStyles({
 	card: {
 		margin: "20px auto",
 		width: "100%",
@@ -25,6 +25,12 @@ const useStyles = makeStyles( {
 		fontSize: tokens.fontSizeBase300,
 		textDecoration: "none",
 	},
+	aiButton: {
+		margin: "30px 0px 10px 0px",
+		cursor: "pointer",
+		fontSize: tokens.fontSizeBase300,
+		textDecoration: "none",
+	},
 	editButton: {
 		color: tokens.colorBrandForegroundLink,
 		margin: "10px 0px 10px 0px",
@@ -45,5 +51,31 @@ const useStyles = makeStyles( {
 			color: tokens.colorStatusDangerBackground3Hover,
 		},
 	},
-} );
+	rewriteTextSkeleton: {
+		width: "100%",
+		borderRadius: tokens.borderRadiusLarge,
+	},
+	rewriteTextBox: {
+		height: "300px",
+		"& .ql-container": {
+			height: "calc(100% - 42px)",
+		},
+		"& .ql-editor": {
+			minHeight: "100%",
+			"&::-webkit-scrollbar": {
+				width: "8px",
+			},
+			"&::-webkit-scrollbar-track": {
+				background: "var(--colorNeutralBackground1)",
+			},
+			"&::-webkit-scrollbar-thumb": {
+				background: "var(--colorNeutralForeground3)",
+				borderRadius: "4px",
+				"&:hover": {
+					background: "var(--colorNeutralForeground2)",
+				},
+			},
+		},
+	}
+});
 export { useStyles };

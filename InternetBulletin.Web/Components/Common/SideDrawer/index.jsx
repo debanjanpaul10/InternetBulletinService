@@ -10,12 +10,12 @@ import {
 	useRestoreFocusSource,
 } from "@fluentui/react-components";
 import {
-	Dismiss28Regular,
 	SignOut24Regular,
 	AddCircle28Regular,
 	PersonAdd28Regular,
 	Person28Regular,
 	BookOpen28Regular,
+	PanelLeftContract28Regular,
 } from "@fluentui/react-icons";
 import { useMsal } from "@azure/msal-react";
 import { useNavigate } from "react-router-dom";
@@ -85,36 +85,36 @@ function SideDrawerComponent() {
 	const { Headings, ButtonTitles } = HeaderPageConstants;
 
 	const IsSideBarOpen = useSelector(
-		( state ) => state.CommonReducer.isSideBarOpen
+		(state) => state.CommonReducer.isSideBarOpen
 	);
 
-	const [ isSideBarOpenState, setIsSideBarOpenState ] = useState( false );
-	const [ currentLoggedInUser, setCurrentLoggedInUser ] = useState( {} );
+	const [isSideBarOpenState, setIsSideBarOpenState] = useState(false);
+	const [currentLoggedInUser, setCurrentLoggedInUser] = useState({});
 
-	useEffect( () => {
-		if ( IsSideBarOpen !== isSideBarOpenState ) {
-			setIsSideBarOpenState( IsSideBarOpen );
+	useEffect(() => {
+		if (IsSideBarOpen !== isSideBarOpenState) {
+			setIsSideBarOpenState(IsSideBarOpen);
 		}
-	}, [ IsSideBarOpen ] );
+	}, [IsSideBarOpen]);
 
-	useEffect( () => {
-		if ( accounts.length > 0 ) {
-			const userName = accounts[ 0 ].idTokenClaims?.extension_UserName;
-			setCurrentLoggedInUser( userName );
+	useEffect(() => {
+		if (accounts.length > 0) {
+			const userName = accounts[0].idTokenClaims?.extension_UserName;
+			setCurrentLoggedInUser(userName);
 		} else {
 			setCurrentLoggedInUser();
 		}
-	}, [ instance, accounts ] );
+	}, [instance, accounts]);
 
 	/**
 	 * Gets the access token silently using msal.
 	 * @returns {string} The access token.
 	 */
 	const getAccessToken = async () => {
-		const tokenData = await instance.acquireTokenSilent( {
+		const tokenData = await instance.acquireTokenSilent({
 			...loginRequests,
-			account: accounts[ 0 ],
-		} );
+			account: accounts[0],
+		});
 
 		return tokenData.accessToken;
 	};
@@ -132,41 +132,41 @@ function SideDrawerComponent() {
 	};
 
 	const handleSideBarClose = () => {
-		dispatch( ToggleSideBar( false ) );
+		dispatch(ToggleSideBar(false));
 	};
 
 	/**
 	 * Handles the home page redirection.
 	 */
 	const handleHomePageRedirect = () => {
-		navigate( Headings.Home.Link );
-		dispatch( ToggleSideBar( false ) );
+		navigate(Headings.Home.Link);
+		dispatch(ToggleSideBar(false));
 	};
 
 	/**
 	 * Handles the login event.
 	 */
 	const handleLoginEvent = () => {
-		dispatch( StartLoader() );
+		dispatch(StartLoader());
 		instance
-			.loginRedirect( loginRequests )
-			.then( async () => {
+			.loginRedirect(loginRequests)
+			.then(async () => {
 				await handleLoginSuccess();
-			} )
-			.catch( ( error ) => {
+			})
+			.catch((error) => {
 				dispatch(
-					ToggleErrorToaster( {
+					ToggleErrorToaster({
 						shouldShow: true,
 						errorMessage: error,
-					} )
+					})
 				);
-				console.error( error );
-			} )
-			.finally( () => {
-				dispatch( StopLoader() );
-			} );
+				console.error(error);
+			})
+			.finally(() => {
+				dispatch(StopLoader());
+			});
 
-		dispatch( ToggleSideBar( false ) );
+		dispatch(ToggleSideBar(false));
 	};
 
 	/**
@@ -174,209 +174,210 @@ function SideDrawerComponent() {
 	 */
 	async function handleLoginSuccess() {
 		dispatch(
-			ToggleSuccessToaster( {
+			ToggleSuccessToaster({
 				shouldShow: true,
 				successMessage: LoginPageConstants.LoginSuccess,
-			} )
+			})
 		);
 
 		let token = "";
-		if ( accounts.length > 0 ) {
+		if (accounts.length > 0) {
 			token = await getAccessToken();
 		}
-		dispatch( GetAllPostsAsync( token ) );
+		dispatch(GetAllPostsAsync(token));
 	}
 
 	/**
 	 * Handles the user logout event.
 	 */
 	const handleLogout = () => {
-		dispatch( StartLoader() );
+		dispatch(StartLoader());
 		instance
-			.logoutRedirect( {
+			.logoutRedirect({
 				postLogoutRedirectUri: window.location.origin,
-			} )
-			.then( () => {
+			})
+			.then(() => {
 				dispatch(
-					ToggleSuccessToaster( {
+					ToggleSuccessToaster({
 						shouldShow: true,
 						successMessage: LoginPageConstants.LogoutSuccess,
-					} )
+					})
 				);
-			} )
-			.catch( ( error ) => {
+			})
+			.catch((error) => {
 				dispatch(
-					ToggleErrorToaster( {
+					ToggleErrorToaster({
 						shouldShow: true,
 						errorMessage: error,
-					} )
+					})
 				);
-				console.error( error );
-			} )
-			.finally( () => {
-				dispatch( StopLoader() );
-			} );
-		dispatch( ToggleSideBar( false ) );
+				console.error(error);
+			})
+			.finally(() => {
+				dispatch(StopLoader());
+			});
+		dispatch(ToggleSideBar(false));
 	};
 
 	/**
 	 * Handles the profile click redirection.
 	 */
 	const handleProfileRedirect = async () => {
-		navigate( Headings.MyProfile.Link );
-		dispatch( ToggleSideBar( false ) );
+		navigate(Headings.MyProfile.Link);
+		dispatch(ToggleSideBar(false));
 	};
 
 	/**
 	 * Handles the Add new post page redirection.
 	 */
 	const handleAddNewPostPageRedirect = () => {
-		navigate( Headings.CreatePost.Link );
-		dispatch( ToggleSideBar( false ) );
+		navigate(Headings.CreatePost.Link);
+		dispatch(ToggleSideBar(false));
 	};
 
 	/**
 	 * Handles the About us page redirection.
 	 */
 	const handleAboutUsPageRedirect = () => {
-		navigate( Headings.AboutUs.Link );
-		dispatch( ToggleSideBar( false ) );
+		navigate(Headings.AboutUs.Link);
+		dispatch(ToggleSideBar(false));
 	};
 
 	return (
 		<OverlayDrawer
-			{ ...restoreFocusSourceAttributes }
+			{...restoreFocusSourceAttributes}
 			as="aside"
-			open={ isSideBarOpenState }
-			onOpenChange={ ( _, { open } ) => setIsSideBarOpenState( open ) }
-			surfaceMotion={ {
-				children: ( _, props ) => <DrawerMotion { ...props } />,
-			} }
+			open={isSideBarOpenState}
+			onOpenChange={(_, { open }) => setIsSideBarOpenState(open)}
+			surfaceMotion={{
+				children: (_, props) => <DrawerMotion {...props} />,
+			}}
 			size="medium"
 		>
-			<DrawerHeader className={ styles.drawerHeader }>
+			<DrawerHeader className={styles.drawerHeader}>
 				<DrawerHeaderTitle
 					action={
 						<Button
 							appearance="subtle"
 							aria-label="Close"
-							icon={ <Dismiss28Regular /> }
-							onClick={ handleSideBarClose }
-						/>
+							onClick={handleSideBarClose}
+						>
+							<PanelLeftContract28Regular />
+						</Button>
 					}
 				>
-					{/* HOME BUTTON */ }
+					{/* HOME BUTTON */}
 					<Button
-						onClick={ handleHomePageRedirect }
-						className={ styles.homeButton }
+						onClick={handleHomePageRedirect}
+						className={styles.homeButton}
 						appearance="subtle"
 					>
-						<img src={ AppLogo } height={ "30px" } />
-						&nbsp; { HomePageConstants.Headings.IBBS }
+						<img src={AppLogo} height={"30px"} />
+						&nbsp; {HomePageConstants.Headings.IBBS}
 					</Button>
 				</DrawerHeaderTitle>
 			</DrawerHeader>
 
-			<DrawerBody className={ styles.drawerBody }>
-				{/* CREATE NEW POST */ }
-				{ isUserLoggedIn() && (
+			<DrawerBody className={styles.drawerBody}>
+				{/* CREATE NEW POST */}
+				{isUserLoggedIn() && (
 					<div className="row">
-						{ location.pathname !== Headings.CreatePost.Link && (
+						{location.pathname !== Headings.CreatePost.Link && (
 							<Tooltip
-								content={ ButtonTitles.Create }
+								content={ButtonTitles.Create}
 								relationship="label"
 								positioning="after"
 							>
 								<Button
-									onClick={ handleAddNewPostPageRedirect }
-									className={ styles.button }
+									onClick={handleAddNewPostPageRedirect}
+									className={styles.button}
 									appearance="transparent"
 								>
 									<AddCircle28Regular />
-									<span>{ Headings.CreatePost.Name }</span>
+									<span>{Headings.CreatePost.Name}</span>
 								</Button>
 							</Tooltip>
-						) }
+						)}
 					</div>
-				) }
+				)}
 
-				{/* MY PROFILE */ }
-				{ isUserLoggedIn() && (
+				{/* MY PROFILE */}
+				{isUserLoggedIn() && (
 					<div className="row">
-						{ location.pathname !== Headings.MyProfile.Link && (
+						{location.pathname !== Headings.MyProfile.Link && (
 							<Tooltip
-								content={ ButtonTitles.MyProfile }
+								content={ButtonTitles.MyProfile}
 								relationship="label"
 								positioning="after"
 							>
 								<Button
-									className={ styles.button }
-									onClick={ handleProfileRedirect }
+									className={styles.button}
+									onClick={handleProfileRedirect}
 									appearance="transparent"
 								>
 									<Person28Regular />
-									<span>{ Headings.MyProfile.Name }</span>
+									<span>{Headings.MyProfile.Name}</span>
 								</Button>
 							</Tooltip>
-						) }
+						)}
 					</div>
-				) }
+				)}
 
-				{/* ABOUT US */ }
+				{/* ABOUT US */}
 				<div className="row">
-					{ location.pathname !== Headings.AboutUs.Link && (
+					{location.pathname !== Headings.AboutUs.Link && (
 						<Tooltip
-							content={ ButtonTitles.AboutUs }
+							content={ButtonTitles.AboutUs}
 							relationship="label"
 							positioning="after"
 						>
 							<Button
-								onClick={ handleAboutUsPageRedirect }
-								className={ styles.button }
+								onClick={handleAboutUsPageRedirect}
+								className={styles.button}
 								appearance="transparent"
 							>
 								<BookOpen28Regular />
-								<span>{ Headings.AboutUs.Name }</span>
+								<span>{Headings.AboutUs.Name}</span>
 							</Button>
 						</Tooltip>
-					) }
+					)}
 				</div>
 
-				{/* LOGIN AND LOGOUT */ }
+				{/* LOGIN AND LOGOUT */}
 				<div className="row">
-					{ !isUserLoggedIn() ? (
+					{!isUserLoggedIn() ? (
 						<Tooltip
-							content={ ButtonTitles.Login }
+							content={ButtonTitles.Login}
 							relationship="label"
 							positioning="after"
 						>
 							<Button
-								className={ styles.button }
-								onClick={ handleLoginEvent }
+								className={styles.button}
+								onClick={handleLoginEvent}
 								appearance="transparent"
 							>
 								<PersonAdd28Regular />
-								<span>{ Headings.Login.Name }</span>
+								<span>{Headings.Login.Name}</span>
 							</Button>
 						</Tooltip>
 					) : (
 						<Tooltip
-							content={ ButtonTitles.Logout }
+							content={ButtonTitles.Logout}
 							relationship="label"
 							positioning="after"
 						>
 							<Button
-								className={ styles.button }
-								onClick={ handleLogout }
+								className={styles.button}
+								onClick={handleLogout}
 								appearance="transparent"
 							>
 								<SignOut24Regular
-									className={ styles.signoutImg }
+									className={styles.signoutImg}
 								/>
-								<span>{ Headings.Logout.Name }</span>
+								<span>{Headings.Logout.Name}</span>
 							</Button>
 						</Tooltip>
-					) }
+					)}
 				</div>
 			</DrawerBody>
 		</OverlayDrawer>

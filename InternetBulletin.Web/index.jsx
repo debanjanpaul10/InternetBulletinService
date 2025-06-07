@@ -20,22 +20,22 @@ import Main from "@components/Main";
 /**
  * Configures the redux store.
  */
-const store = configureStore( {
+const store = configureStore({
 	reducer: {
 		PostsReducer: PostsReducer,
 		CommonReducer: CommonReducer,
 		UserReducer: UserReducer,
 	},
-} );
+});
 
-const root = ReactDOM.createRoot( document.getElementById( "root" ) );
-const msalInstance = new PublicClientApplication( msalConfig );
+const root = ReactDOM.createRoot(document.getElementById("root"));
+const msalInstance = new PublicClientApplication(msalConfig);
 
 root.render(
-	<MsalProvider instance={ msalInstance }>
+	<MsalProvider instance={msalInstance}>
 		<Router>
-			<Provider store={ store }>
-				<Main msalInstance={ msalInstance } />
+			<Provider store={store}>
+				<Main msalInstance={msalInstance} />
 			</Provider>
 		</Router>
 	</MsalProvider>

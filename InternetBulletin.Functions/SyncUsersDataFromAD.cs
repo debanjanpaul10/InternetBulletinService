@@ -15,6 +15,8 @@ namespace InternetBulletin.Functions
     /// <summary>
     /// Sync users data from azure AD to IBBS DB.
     /// </summary>
+    /// <param name="loggerFactory">The logger factory.</param>
+    /// <param name="usersService">The users service.</param>
     public class SyncUsersDataFromAD(ILoggerFactory loggerFactory, IUsersService usersService)
     {
         /// <summary>

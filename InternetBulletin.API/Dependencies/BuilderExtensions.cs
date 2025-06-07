@@ -13,7 +13,7 @@ namespace InternetBulletin.API.Dependencies
     using InternetBulletin.Shared.Constants;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-    using Microsoft.Identity.Web;
+    using Microsoft.IdentityModel.Tokens;
     using static InternetBulletin.Shared.Constants.ConfigurationConstants;
 
     /// <summary>
@@ -53,13 +53,38 @@ namespace InternetBulletin.API.Dependencies
         /// <param name="builder">The builder.</param>
         public static void ConfigureApiServices(this WebApplicationBuilder builder)
         {
+            builder.Services.AddMemoryCache();
             builder.ConfigureAuthenticationServices();
+            builder.ConfigureHttpClientFactory();
             builder.ConfigureAzureSqlServer();
-            builder.ConfigureBusinessManagerDependencies();
-            builder.ConfigureDataManagerDependencies();
+            builder.ConfigureMongoDbServer();
+
+            builder.Services.ConfigureHelperServiceDependencies();
+            builder.Services.ConfigureBusinessManagerDependencies();
+            builder.Services.ConfigureDataManagerDependencies();
         }
 
         #region PRIVATE Methods
+
+        /// <summary>
+        /// Configures http client factory.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <exception cref="ArgumentNullException">ArgumentNullException error.</exception>
+        private static void ConfigureHttpClientFactory(this WebApplicationBuilder builder)
+        {
+            builder.Services.AddHttpClient(IbbsConstants.IbbsAIConstant, client =>
+            {
+                var apiBaseAddress = builder.Configuration[IbbsAiApiBaseUrlConstant];
+                if (string.IsNullOrEmpty(apiBaseAddress))
+                {
+                    throw new ArgumentNullException(apiBaseAddress);
+                }
+
+                client.BaseAddress = new Uri(apiBaseAddress);
+                client.Timeout = TimeSpan.FromMinutes(3);
+            });
+        }
 
         /// <summary>
         /// Configures authentication services.
@@ -68,33 +93,29 @@ namespace InternetBulletin.API.Dependencies
         private static void ConfigureAuthenticationServices(this WebApplicationBuilder builder)
         {
             var configuration = builder.Configuration;
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(options =>
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                    {
-                        ValidateAudience = true,
-                        ValidAudience = configuration[IBBSApiClientIdConstant],
-                        ValidateLifetime = true,
-                        ValidateIssuer = true,
-                        ValidIssuer = configuration[IBBSApiIssuerConstant]
-                    };
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnTokenValidated = async context =>
-                        {
-                            await context.HandleAuthTokenValidationSuccessAsync();
-                        },
-                        OnAuthenticationFailed = async context =>
-                        {
-                            await context.HandleAuthTokenValidationFailedAsync();
-                        }
-                    };
-                },
-                options =>
+                    ValidateLifetime = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    RequireExpirationTime = true,
+                    RequireSignedTokens = true,
+                    ValidAudience = configuration[IBBSApiClientIdConstant],
+                    ValidIssuer = configuration[IBBSApiIssuerConstant],
+                    SignatureValidator = (token, _) => new Microsoft.IdentityModel.JsonWebTokens.JsonWebToken(token)
+                };
+                options.Events = new JwtBearerEvents
                 {
-                    configuration.Bind(AzureAdB2CConstant, options);
-                });
+                    OnTokenValidated = HandleAuthTokenValidationSuccessAsync,
+                    OnAuthenticationFailed = HandleAuthTokenValidationFailedAsync
+                };
+            });
 
         }
 

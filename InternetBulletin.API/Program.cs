@@ -10,7 +10,6 @@ namespace InternetBulletin.API
     using Azure.Identity;
     using InternetBulletin.API.Dependencies;
     using InternetBulletin.API.Middleware;
-    using InternetBulletin.Shared.Helpers;
     using Microsoft.OpenApi.Models;
     using static InternetBulletin.Shared.Constants.ConfigurationConstants;
 
@@ -39,7 +38,7 @@ namespace InternetBulletin.API
 
             builder.ConfigureAzureAppConfiguration(credentials);
             builder.ConfigureApiServices();
-            builder.ConfigureServices();
+            builder.Services.ConfigureServices();
 
             var app = builder.Build();
             app.ConfigureApplication();
@@ -49,11 +48,11 @@ namespace InternetBulletin.API
         /// Configures the services.
         /// </summary>
         /// <param name="services">The services.</param>
-        public static void ConfigureServices(this WebApplicationBuilder builder)
+        public static void ConfigureServices(this IServiceCollection services)
         {
-            builder.Services.AddControllers();
-            builder.Services.AddOpenApi();
-            builder.Services.AddCors(options =>
+            services.AddControllers();
+            services.AddOpenApi();
+            services.AddCors(options =>
             {
                 options.AddDefaultPolicy(p =>
                 {
@@ -63,7 +62,7 @@ namespace InternetBulletin.API
                 });
             });
 
-            builder.Services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
@@ -77,11 +76,11 @@ namespace InternetBulletin.API
                     }
                 });
             });
-            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-            builder.Services.AddProblemDetails();
-            builder.Services.AddHttpContextAccessor();
-            builder.Services.AddHttpClient<IHttpClientHelper, HttpClientHelper>();
-            builder.Services.AddScoped<IHttpClientHelper, HttpClientHelper>();
+            services.AddMvc(options =>
+            {
+                options.Filters.AddService<GlobalExceptionFilter>();
+            });
+            services.AddHttpContextAccessor();
         }
 
         /// <summary>
@@ -102,7 +101,6 @@ namespace InternetBulletin.API
                 });
             }
 
-            app.UseExceptionHandler();
             app.UseHttpsRedirection();
             app.UseCors();
             app.UseAuthentication();

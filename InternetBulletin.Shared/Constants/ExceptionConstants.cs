@@ -116,5 +116,15 @@ namespace InternetBulletin.Shared.Constants
 		/// </summary>
 		public const string UserIdNotPresentExceptionConstant = "User id is not present in the headers.";
 
+		/// <summary>
+		/// The post data cannot be empty exception constant
+		/// </summary>
+		public const string PostDataCannotBeEmptyExceptionConstant = "Oops! It seems the story that you have entered (or not yet entered) is blank!";
+
+		/// <summary>
+		/// The ai services cannot be availed exception constant.
+		/// </summary>
+		public const string AiServicesCannotBeAvailedExceptionConstant = "Oops! It seems our AI Services are down as of this moment. Please try again after sometime.";
+
 	}
 }

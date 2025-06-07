@@ -11,6 +11,7 @@ import {
 	TOGGLE_EDIT_POST_DIALOG,
 	GET_EDIT_POST_DATA,
 	TOGGLE_EDIT_POST_LOADER,
+	TOGGLE_REWRITE_LOADER,
 } from "@store/Posts/ActionTypes";
 
 const initialState = {
@@ -25,6 +26,7 @@ const initialState = {
 	isEditModalOpen: false,
 	editPostData: {},
 	isEditPostDataLoading: false,
+	isRewriteLoading: false,
 };
 
 /**
@@ -33,8 +35,8 @@ const initialState = {
  * @param {Object} action The action.
  * @returns {Object} The updated state.
  */
-const PostsReducer = ( state = initialState, action ) => {
-	switch ( action.type ) {
+const PostsReducer = (state = initialState, action) => {
+	switch (action.type) {
 		case GET_POST_DATA: {
 			return {
 				...state,
@@ -44,7 +46,7 @@ const PostsReducer = ( state = initialState, action ) => {
 		case GET_ALL_POSTS_DATA: {
 			return {
 				...state,
-				allPostsData: [ ...action.payload ],
+				allPostsData: [...action.payload],
 			};
 		}
 		case START_SPINNER: {
@@ -105,6 +107,12 @@ const PostsReducer = ( state = initialState, action ) => {
 			return {
 				...state,
 				isEditPostDataLoading: action.payload,
+			};
+		}
+		case TOGGLE_REWRITE_LOADER: {
+			return {
+				...state,
+				isRewriteLoading: action.payload
 			};
 		}
 		default: {

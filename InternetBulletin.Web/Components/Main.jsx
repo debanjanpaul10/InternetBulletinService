@@ -35,20 +35,20 @@ import { CookiesConstants, PageConstants } from "@helpers/ibbs.constants";
  *
  * @returns {JSX.Element} The main application wrapper with theme context and MSAL provider
  */
-function Main( { msalInstance } ) {
+function Main({ msalInstance }) {
 	const { DarkModeConstant, LightConstant, DarkConstant } = PageConstants;
-	const [ themeMode, setThemeMode ] = useState( LightConstant );
-	const [ initialized, setInitialized ] = useState( false );
+	const [themeMode, setThemeMode] = useState(LightConstant);
+	const [initialized, setInitialized] = useState(false);
 
-	useEffect( () => {
+	useEffect(() => {
 		const savedDarkModeSettings =
-			Cookies.get( CookiesConstants.DarkMode.Name ) === "true";
-		setThemeMode( savedDarkModeSettings ? DarkConstant : LightConstant );
+			Cookies.get(CookiesConstants.DarkMode.Name) === "true";
+		setThemeMode(savedDarkModeSettings ? DarkConstant : LightConstant);
 
-		document.body.classList.toggle( DarkModeConstant, savedDarkModeSettings );
+		document.body.classList.toggle(DarkModeConstant, savedDarkModeSettings);
 
-		msalInstance.initialize().then( () => setInitialized( true ) );
-	}, [] );
+		msalInstance.initialize().then(() => setInitialized(true));
+	}, []);
 
 	/**
 	 * Toggles the theme mode.
@@ -56,7 +56,7 @@ function Main( { msalInstance } ) {
 	const toggleThemeMode = () => {
 		const newThemeMode =
 			themeMode === LightConstant ? DarkConstant : LightConstant;
-		setThemeMode( newThemeMode );
+		setThemeMode(newThemeMode);
 
 		document.body.classList.toggle(
 			DarkModeConstant,
@@ -72,9 +72,9 @@ function Main( { msalInstance } ) {
 	};
 
 	return (
-		<ThemeContext.Provider value={ { themeMode, toggleThemeMode } }>
-			<Spinner isLoading={ !initialized } />
-			{ initialized && (
+		<ThemeContext.Provider value={{ themeMode, toggleThemeMode }}>
+			<Spinner isLoading={!initialized} />
+			{initialized && (
 				<FluentProvider
 					theme={
 						themeMode === DarkConstant
@@ -84,8 +84,8 @@ function Main( { msalInstance } ) {
 				>
 					<IBBS />
 				</FluentProvider>
-			) }
-			{ ConsoleLogMessage }
+			)}
+			{ConsoleLogMessage}
 		</ThemeContext.Provider>
 	);
 }

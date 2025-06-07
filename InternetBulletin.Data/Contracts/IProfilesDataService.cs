@@ -8,7 +8,7 @@
 namespace InternetBulletin.Data.Contracts
 {
 	using InternetBulletin.Data.Entities;
-	using InternetBulletin.Shared.DTOs.Posts;
+	using InternetBulletin.Shared.DTOs.Users;
 
 	/// <summary>
 	/// The Profiles Data Service Interface.

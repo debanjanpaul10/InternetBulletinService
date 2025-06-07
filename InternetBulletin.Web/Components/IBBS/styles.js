@@ -1,6 +1,6 @@
 import { makeStyles } from "@fluentui/react-components";
 
-const useStyles = makeStyles( {
+const useStyles = makeStyles({
 	headerNav: {
 		position: "fixed",
 		top: 0,
@@ -10,8 +10,8 @@ const useStyles = makeStyles( {
 	},
 	bodyContent: {
 		marginTop: "64px",
-		height: "calc(100vh)",
 		overflow: "auto",
+		minHeight: "calc(100vh)",
 	},
 	footerContent: {
 		width: "90%",
@@ -21,6 +21,6 @@ const useStyles = makeStyles( {
 		margin: "0 auto",
 		borderTop: "1px solid",
 	},
-} );
+});
 
 export { useStyles };

@@ -17,17 +17,13 @@ namespace InternetBulletin.UnitTests.Business
     using System;
     using System.Threading.Tasks;
     using Xunit;
+    using static InternetBulletin.UnitTests.Helpers.TestsHelper;
 
     /// <summary>
     /// The Profiles Service Tests Class.
     /// </summary>
     public class ProfilesServiceTests
     {
-        /// <summary>
-        /// The user name.
-        /// </summary>
-        private readonly static string UserName = "user1234";
-
         /// <summary>
         /// The logger mock.
         /// </summary>
@@ -69,9 +65,9 @@ namespace InternetBulletin.UnitTests.Business
         public async Task GetUserProfileDataAsync_ValidUserName_ReturnsProfileData()
         {
             // Arrange
-            var graphUserData = TestsHelper.PrepareGraphUserDTOData(UserName);
-            var userPosts = TestsHelper.PrepareUserPostsData(UserName);
-            var userRatings = TestsHelper.PrepareUserPostRatingsData();
+            var graphUserData = PrepareGraphUserDTOData(UserName);
+            var userPosts = PrepareUserPostsData(UserName);
+            var userRatings = PrepareUserPostRatingsData();
 
             this._usersServiceMock.Setup(x => x.GetGraphUserDataAsync(It.IsAny<string>())).ReturnsAsync(graphUserData);
             this._profilesDataServiceMock.Setup(x => x.GetUserPostsAsync(It.IsAny<string>())).ReturnsAsync(userPosts);
@@ -140,7 +136,7 @@ namespace InternetBulletin.UnitTests.Business
         public async Task GetUserProfileDataAsync_NoPostsOrRatings_ReturnsEmptyCollections()
         {
             // Arrange
-            var graphUserData = TestsHelper.PrepareGraphUserDTOData(UserName);
+            var graphUserData = PrepareGraphUserDTOData(UserName);
 
             this._usersServiceMock.Setup(x => x.GetGraphUserDataAsync(It.IsAny<string>())).ReturnsAsync(graphUserData);
             this._profilesDataServiceMock.Setup(x => x.GetUserPostsAsync(It.IsAny<string>())).ReturnsAsync([]);
@@ -164,8 +160,8 @@ namespace InternetBulletin.UnitTests.Business
         {
             // Arrange
             var postId = Guid.NewGuid();
-            var graphUserData = TestsHelper.PrepareGraphUserDTOData(UserName);
-            var userPosts = TestsHelper.PrepareUserPostsData(UserName);
+            var graphUserData = PrepareGraphUserDTOData(UserName);
+            var userPosts = PrepareUserPostsData(UserName);
 
             this._usersServiceMock.Setup(x => x.GetGraphUserDataAsync(It.IsAny<string>())).ReturnsAsync(graphUserData);
             this._profilesDataServiceMock.Setup(x => x.GetUserPostsAsync(It.IsAny<string>())).ReturnsAsync(userPosts);

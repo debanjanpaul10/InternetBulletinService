@@ -1,6 +1,6 @@
 import { makeStyles } from "@fluentui/react-components";
 
-const useStyles = makeStyles( {
+const useStyles = makeStyles({
 	notFoundHeader: {
 		fontFamily: "Architects Daughter",
 		textAlign: "center",
@@ -8,6 +8,6 @@ const useStyles = makeStyles( {
 		justifyContent: "center",
 		alignItems: "center",
 	},
-} );
+});
 
 export { useStyles };

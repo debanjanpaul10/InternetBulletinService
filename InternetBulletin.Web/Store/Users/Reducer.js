@@ -14,8 +14,8 @@ const initialState = {
  * @param {Object} action The action.
  * @returns {Object} The updated state.
  */
-const UserReducer = ( state = initialState, action ) => {
-	switch ( action.type ) {
+const UserReducer = (state = initialState, action) => {
+	switch (action.type) {
 		case GET_USER_PROFILE_DATA: {
 			return {
 				...state,

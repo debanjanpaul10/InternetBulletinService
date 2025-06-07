@@ -3,13 +3,21 @@
   <Sdk Name="Microsoft.Build.Sql" Version="1.0.0" />
   <PropertyGroup>
     <Name>InternetBulletin.Database</Name>
-    <ProjectGuid>{849DF4E7-F43F-4238-ABAF-E3B145098584}</ProjectGuid>
+    <ProjectGuid>{849df4e7-f43f-4238-abaf-e3b145098584}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider</DSP>
     <ModelCollation>1033, CI</ModelCollation>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Stored Procedures" />
     <Folder Include="Tables" />
+    <Build Include="Tables/Posts.sql" />
+    <Build Include="Tables/AiUsages.sql" />
+    <Build Include="Tables/PostRatings.sql" />
+    <Build Include="Tables/Users.sql" />
+    <Build Include="Stored Procedures/GetUserPostsAndRatings.sql" />
   </ItemGroup>
   <Target Name="BeforeBuild">
     <Delete Files="$(BaseIntermediateOutputPath)\project.assets.json" />

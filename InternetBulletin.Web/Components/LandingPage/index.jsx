@@ -40,40 +40,41 @@ function LandingPageComponent() {
 	const { instance, accounts } = useMsal();
 
 	const IsPostsDataLoading = useSelector(
-		( state ) => state.PostsReducer.isPostsDataLoading
+		(state) => state.PostsReducer.isPostsDataLoading
 	);
 
-	const [ isTokenRetrieved, setIsTokenRetrieved ] = useState( false );
+	const [isTokenRetrieved, setIsTokenRetrieved] = useState(false);
 
-	// Initial load - check if user is logged in
-	useEffect( () => {
-		if ( accounts.length === 0 ) {
-			dispatch( GetAllPostsAsync( "" ) );
-			setIsTokenRetrieved( true );
+	/**
+	 * Initial load -> Check if user is logged in
+	 */
+	useEffect(() => {
+		if (accounts.length === 0) {
+			dispatch(GetAllPostsAsync(""));
+			setIsTokenRetrieved(true);
 		}
-	}, [] );
+	}, []);
 
-	// Handle token retrieval and post fetching when user is logged in
-	useEffect( () => {
-		if ( accounts.length > 0 ) {
+	useEffect(() => {
+		if (accounts.length > 0) {
 			fetchPostsWithToken();
 		}
-	}, [ accounts ] );
+	}, [accounts]);
 
 	/**
 	 * Fetches posts with authentication token
 	 */
 	const fetchPostsWithToken = async () => {
 		try {
-			setIsTokenRetrieved( false );
+			setIsTokenRetrieved(false);
 			const token = await getAccessToken();
-			setIsTokenRetrieved( true );
-			dispatch( GetAllPostsAsync( token ) );
-		} catch ( error ) {
-			console.error( "Error getting token:", error );
+			setIsTokenRetrieved(true);
+			dispatch(GetAllPostsAsync(token));
+		} catch (error) {
+			console.error("Error getting token:", error);
 			// If token retrieval fails, fall back to unauthenticated access
-			setIsTokenRetrieved( true );
-			dispatch( GetAllPostsAsync( "" ) );
+			setIsTokenRetrieved(true);
+			dispatch(GetAllPostsAsync(""));
 		}
 	};
 
@@ -82,21 +83,21 @@ function LandingPageComponent() {
 	 * @returns {string} The access token.
 	 */
 	const getAccessToken = async () => {
-		const tokenData = await instance.acquireTokenSilent( {
+		const tokenData = await instance.acquireTokenSilent({
 			...loginRequests,
-			account: accounts[ 0 ],
-		} );
+			account: accounts[0],
+		});
 
 		return tokenData.accessToken;
 	};
 
 	return (
 		<div className="container">
-			<Spinner isLoading={ IsPostsDataLoading || !isTokenRetrieved } />
+			<Spinner isLoading={IsPostsDataLoading || !isTokenRetrieved} />
 			<div className="row">
 				<div className="col-sm-12 mt-4">
-					<LargeTitle className={ styles.mainHeading }>
-						{ HomePageConstants.Headings.WelcomeMessage }
+					<LargeTitle className={styles.mainHeading}>
+						{HomePageConstants.Headings.WelcomeMessage}
 					</LargeTitle>
 				</div>
 			</div>

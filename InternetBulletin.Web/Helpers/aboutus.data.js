@@ -16,7 +16,7 @@ const AboutUsData = [
 		Heading: "Microsoft SQL Server",
 		Description: `
 		Get the flexibility you need to use integrated solutions and apps with your data—in the cloud, on-premises, or at the edge.
-        SQL Server 2022 is the most Azure-enabled release yet, with innovation across performance, security, and availability`,
+		SQL Server 2022 is the most Azure-enabled release yet, with innovation across performance, security, and availability`,
 		Image: SQLImg,
 		Link: "https://www.microsoft.com/en-in/sql-server",
 	},

@@ -1,6 +1,6 @@
 import { makeStyles, tokens } from "@fluentui/react-components";
 
-const useStyles = makeStyles( {
+const useStyles = makeStyles({
 	content: {
 		flex: "1",
 		padding: "16px",
@@ -50,6 +50,6 @@ const useStyles = makeStyles( {
 		width: "28px !important",
 		height: "28px !important",
 	},
-} );
+});
 
 export { useStyles };

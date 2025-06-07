@@ -1,5 +1,15 @@
+// *********************************************************************************
+//	<copyright file="PostWithRatingsDTO.cs" company="Personal">
+//		Copyright (c) 2025 Personal
+//	</copyright>
+// <summary>The post with ratings dto.</summary>
+// *********************************************************************************
+
 namespace InternetBulletin.Shared.DTOs.Posts
 {
+    /// <summary>
+    /// The post with ratings dto.
+    /// </summary>
     public class PostWithRatingsDTO
     {
         /// <summary>

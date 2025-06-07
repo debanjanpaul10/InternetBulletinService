@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
 	Card,
-	CardHeader,
 	Table,
 	TableBody,
 	TableCell,
@@ -9,7 +8,6 @@ import {
 	TableRow,
 	Text,
 	Title1,
-	tokens,
 } from "@fluentui/react-components";
 
 import { useStyles } from "./styles";

@@ -33,28 +33,28 @@ function FooterComponent() {
 				<Button
 					as="a"
 					appearance="subtle"
-					href={ EmailLink }
-					icon={ <MailRegular /> }
+					href={EmailLink}
+					icon={<MailRegular />}
 				/>
 				<Button
-					icon={ <FontAwesomeIcon icon={ faFacebook } /> }
+					icon={<FontAwesomeIcon icon={faFacebook} />}
 					appearance="subtle"
 					as="a"
-					href={ FaceBookLink }
+					href={FaceBookLink}
 					target="_blank"
 				/>
 				<Button
-					icon={ <FontAwesomeIcon icon={ faGithub } /> }
+					icon={<FontAwesomeIcon icon={faGithub} />}
 					appearance="subtle"
 					as="a"
-					href={ GithubLink }
+					href={GithubLink}
 					target="_blank"
 				/>
 				<Button
-					icon={ <FontAwesomeIcon icon={ faLinkedin } /> }
+					icon={<FontAwesomeIcon icon={faLinkedin} />}
 					appearance="subtle"
 					as="a"
-					href={ LinkedinLink }
+					href={LinkedinLink}
 					target="_blank"
 				/>
 			</div>

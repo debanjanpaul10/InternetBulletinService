@@ -18,5 +18,7 @@ BEGIN
 
     END TRY
     BEGIN CATCH
+        SELECT 
+            ERROR_SEVERITY() AS ErrorSeverity, ERROR_STATE() AS ErrorState, ERROR_MESSAGE() AS ErrorMessage, ERROR_LINE() AS ErrorLine;
     END CATCH
 END

@@ -21,12 +21,6 @@ namespace InternetBulletin.Business.Contracts
         Task<GraphUserDTO> GetGraphUserDataAsync(string userName);
 
         /// <summary>
-        /// Gets all graph users data async.
-        /// </summary>
-        /// <returns>The list of graph user data</returns>
-        Task<List<GraphUserDTO>> GetAllGraphUsersDataAsync();
-
-        /// <summary>
         /// Saves users data from azure ad async.
         /// </summary>
         /// <returns>The boolean for success / failure</returns>
