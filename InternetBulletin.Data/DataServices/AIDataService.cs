@@ -11,7 +11,7 @@ namespace InternetBulletin.Data.DataServices
 	using InternetBulletin.Data.Contracts;
 	using InternetBulletin.Data.Entities;
 	using InternetBulletin.Shared.Constants;
-	using InternetBulletin.Shared.DTOs;
+	using InternetBulletin.Shared.DTOs.AI;
 	using Microsoft.Extensions.Logging;
 
 	/// <summary>

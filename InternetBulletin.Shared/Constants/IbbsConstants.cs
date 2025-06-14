@@ -64,10 +64,14 @@ namespace InternetBulletin.Shared.Constants
         RewriteStory = 1,
 
         /// <summary>
-        /// The story helper enum.
+        /// The moderate content enum.
         /// </summary>
-        /// <remarks>To be done: after adding more features</remarks>
-        HelpStory = 2
+        ModerateContent = 2,
+
+        /// <summary>
+        /// The genre tag enum.
+        /// </summary>
+        GenreTag = 3,
     }
 }
 

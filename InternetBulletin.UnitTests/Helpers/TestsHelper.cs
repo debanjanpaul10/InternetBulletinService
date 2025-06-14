@@ -7,10 +7,10 @@
 
 namespace InternetBulletin.UnitTests.Helpers
 {
+    using InternetBulletin.Shared.DTOs.AI;
     using InternetBulletin.Shared.DTOs.Posts;
     using InternetBulletin.Shared.DTOs.Users;
-    using Microsoft.Graph.Models;
-    using Post = InternetBulletin.Data.Entities.Post;
+    using InternetBulletin.Data.Entities;
 
     /// <summary>
     /// Tests helper.
@@ -230,14 +230,17 @@ namespace InternetBulletin.UnitTests.Helpers
         /// <summary>
         /// Prepares rewrite request dto for user.
         /// </summary>
-        public static RewriteRequestDTO PrepareMockRewriteRequestDTO()
+        public static UserStoryRequestDTO PrepareMockRewriteRequestDTO()
         {
-            return new RewriteRequestDTO
+            return new UserStoryRequestDTO
             {
                 Story = "Some Sample Story"
             };
         }
 
+        /// <summary>
+        /// Prepares the rewrite response DTO.
+        /// </summary>
         public static RewriteResponseDTO PrepareRewriteResponseDTO()
         {
             return new RewriteResponseDTO()
@@ -247,6 +250,114 @@ namespace InternetBulletin.UnitTests.Helpers
                 RewrittenStory = "This is the rewritten story",
                 TotalTokensConsumed = new Random().Next(101, 200)
             };
+        }
+
+        /// <summary>
+        /// Prepares the mock tag response dto.
+        /// </summary>
+        /// <param name="expectedTag">The expected mock tag.</param>
+        public static TagResponseDTO PrepareMockTagResponseDTO(string expectedTag)
+        {
+            return new TagResponseDTO()
+            {
+                UserStoryTag = expectedTag,
+                TotalTokensConsumed = new Random().Next(1, 100),
+                CandidatesTokenCount = new Random().Next(1, 100),
+                PromptTokenCount = new Random().Next(101, 200)
+            };
+        }
+
+
+        /// <summary>
+        /// Prepares the moderation content response dto.
+        /// </summary>
+        /// <param name="expectedRating">The expected mock rating</param>
+        public static ModerationContentResponseDTO PrepareModerationContentResponseDTO(string expectedRating)
+        {
+            return new ModerationContentResponseDTO
+            {
+                ContentRating = expectedRating,
+                TotalTokensConsumed = 100,
+                CandidatesTokenCount = 50,
+                PromptTokenCount = 50
+            };
+        }
+
+        /// <summary>
+        /// Prepares a new list of graph user data.
+        /// </summary>
+        public static List<GraphUserDTO> PrepareListofGraphUserData()
+        {
+            return
+            [
+                new() {
+                    Id = Guid.NewGuid().ToString(),
+                    DisplayName = "Test User 1",
+                    EmailAddress = "test1@example.com",
+                    UserName = "testuser1"
+                },
+                new() {
+                    Id = Guid.NewGuid().ToString(),
+                    DisplayName = "Test User 2",
+                    EmailAddress = "test2@example.com",
+                    UserName = "testuser2"
+                }
+            ];
+        }
+
+        /// <summary>
+        /// Prepares the existing user data.
+        /// </summary>
+        /// <param name="existingUserId">The existing user id.</param>
+        public static List<GraphUserDTO> PrepareExistingGraphUserData(string existingUserId)
+        {
+            return
+            [
+                new() {
+                    Id = existingUserId,
+                    DisplayName = "Updated Name",
+                    EmailAddress = "updated@example.com",
+                    UserName = "updateduser"
+                },
+                new() {
+                    Id = Guid.NewGuid().ToString(),
+                    DisplayName = "New User",
+                    EmailAddress = "new@example.com",
+                    UserName = "newuser"
+                }
+            ];
+        }
+
+        /// <summary>
+        /// Prepares the mock of posts data.
+        /// </summary>
+        /// <param name="userName">The user name.</param>
+        public static List<Post> PrepareMockPostsData(string userName)
+        {
+            return
+            [
+                new() { PostId = Guid.NewGuid(), PostTitle = "Post1", PostOwnerUserName = userName, IsActive = true },
+                new() { PostId = Guid.NewGuid(), PostTitle = "Post2", PostOwnerUserName = userName, IsActive = true },
+                new() { PostId = Guid.NewGuid(), PostTitle = "Post3", PostOwnerUserName = "OtherUser", IsActive = true },
+                new() { PostId = Guid.NewGuid(), PostTitle = "Post4", PostOwnerUserName = userName, IsActive = false }
+            ];
+        }
+
+        /// <summary>
+        /// Prepares the mock of posts ratings data.
+        /// </summary>
+        /// <param name="userName">The user name.</param>
+        /// <param name="posts">The list of posts</param>
+        public static List<PostRating> PrepareMockPostsRatingsData(string userName, List<Post> posts)
+        {
+            return
+            [
+                new() { PostId = posts[0].PostId, UserName = userName, RatingValue = 1, IsActive = true, RatedOn = DateTime.UtcNow },
+                new() { PostId = posts[1].PostId, UserName = userName, RatingValue = 1, IsActive = true, RatedOn = DateTime.UtcNow },
+                new() { PostId = posts[0].PostId, UserName = "OtherUser", RatingValue = 1, IsActive = true },
+                new() { PostId = posts[1].PostId, UserName = userName, RatingValue = 0, IsActive = true },
+                new() { PostId = posts[2].PostId, UserName = userName, RatingValue = 1, IsActive = true }
+            ];
         }
     }
 }

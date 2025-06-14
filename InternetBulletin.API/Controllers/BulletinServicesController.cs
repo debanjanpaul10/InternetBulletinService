@@ -10,7 +10,7 @@ namespace InternetBulletin.API.Controllers
 	using InternetBulletin.Business.Contracts;
 	using InternetBulletin.Shared.Constants;
 	using InternetBulletin.Shared.DTOs.ApplicationInfo;
-	using InternetBulletin.Shared.DTOs.Posts;
+	using InternetBulletin.Shared.DTOs.AI;
 	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Mvc;
 
@@ -26,8 +26,7 @@ namespace InternetBulletin.API.Controllers
 	[ApiController]
 	[Route(RouteConstants.BulletinServicesBase_RoutePrefix)]
 	public class BulletinServicesController(
-		ILogger<BulletinServicesController> logger, IHttpContextAccessor httpContextAccessor, 
-		IUsersService usersService, IAIService aiService, IBulletinService bulletinService) : BaseController(httpContextAccessor)
+		ILogger<BulletinServicesController> logger, IHttpContextAccessor httpContextAccessor, IUsersService usersService, IAIService aiService, IBulletinService bulletinService) : BaseController(httpContextAccessor)
 	{
 		/// <summary>
 		/// The logger.
@@ -89,6 +88,7 @@ namespace InternetBulletin.API.Controllers
 				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodStart, nameof(GetUsersDataFromGraphApiAsync), DateTime.UtcNow, this.UserName));
 				if (this.IsAuthorized())
 				{
+					ArgumentException.ThrowIfNullOrEmpty(userName);
 					var result = await this._usersService.GetGraphUserDataAsync(userName);
 					if (result is not null)
 					{
@@ -114,6 +114,8 @@ namespace InternetBulletin.API.Controllers
 			}
 		}
 
+		#region AI Services
+
 		/// <summary>
 		/// Rewrites the with ai asynchronous.
 		/// </summary>
@@ -121,7 +123,7 @@ namespace InternetBulletin.API.Controllers
 		/// <returns>The ai rewritten response.</returns>
 		[HttpPost]
 		[Route(RouteConstants.RewriteWithAI_Route)]
-		public async Task<IActionResult> RewriteWithAIAsync(RewriteRequestDTO requestDto)
+		public async Task<IActionResult> RewriteWithAIAsync(UserStoryRequestDTO requestDto)
 		{
 			try
 			{
@@ -129,7 +131,6 @@ namespace InternetBulletin.API.Controllers
 				if (this.IsAuthorized())
 				{
 					ArgumentNullException.ThrowIfNull(requestDto);
-		  
 					var rewrittenStory = await this._aiService.RewriteWithAIAsync(this.UserName, requestDto);
 					if (!string.IsNullOrEmpty(rewrittenStory))
 					{
@@ -152,7 +153,83 @@ namespace InternetBulletin.API.Controllers
 				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodEnded, nameof(RewriteWithAIAsync), DateTime.UtcNow, this.UserName));
 			}
 		}
+
+		/// <summary>
+		/// Generates the tag for story asynchronous.
+		/// </summary>
+		/// <param name="requestDto">The request dto.</param>
+		/// <returns>The tag response dto.</returns>
+		[HttpPost]
+		[Route(RouteConstants.GenerateGenreTag_Route)]
+		public async Task<IActionResult> GenerateTagForStoryAsync(UserStoryRequestDTO requestDto)
+		{
+			try
+			{
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodStart, nameof(GenerateTagForStoryAsync), DateTime.UtcNow, this.UserName));
+				if (this.IsAuthorized())
+				{
+					ArgumentNullException.ThrowIfNull(requestDto);
+					var tagForStory = await this._aiService.GenerateTagForStoryAsync(this.UserName, requestDto);
+					if (!string.IsNullOrEmpty(tagForStory))
+					{
+						return this.HandleSuccessResult(tagForStory);
+					}
+
+					return this.HandleBadRequest(ExceptionConstants.SomethingWentWrongMessageConstant);
+				}
+
+				return this.HandleUnAuthorizedRequest();
+
+			}
+			catch (Exception ex)
+			{
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodFailed, nameof(GenerateTagForStoryAsync), DateTime.UtcNow, ex.Message));
+				throw;
+			}
+			finally
+			{
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodEnded, nameof(GenerateTagForStoryAsync), DateTime.UtcNow, this.UserName));
+			}
+		}
+
+		/// <summary>
+		/// Moderates the content data asynchronous.
+		/// </summary>
+		/// <param name="requestDto">The request dto.</param>
+		/// <returns>The moderation content response.</returns>
+		[HttpPost]
+		[Route(RouteConstants.ModerateContent_Route)]
+		public async Task<IActionResult> ModerateContentDataAsync(UserStoryRequestDTO requestDto)
+		{
+			try
+			{
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodStart, nameof(ModerateContentDataAsync), DateTime.UtcNow, this.UserName));
+				if (this.IsAuthorized())
+				{
+					ArgumentNullException.ThrowIfNull(requestDto);
+					var tagForStory = await this._aiService.ModerateContentDataAsync(this.UserName, requestDto);
+					if (!string.IsNullOrEmpty(tagForStory))
+					{
+						return this.HandleSuccessResult(tagForStory);
+					}
+
+					return this.HandleBadRequest(ExceptionConstants.SomethingWentWrongMessageConstant);
+				}
+
+				return this.HandleUnAuthorizedRequest();
+
+			}
+			catch (Exception ex)
+			{
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodFailed, nameof(ModerateContentDataAsync), DateTime.UtcNow, ex.Message));
+				throw;
+			}
+			finally
+			{
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodEnded, nameof(ModerateContentDataAsync), DateTime.UtcNow, this.UserName));
+			}
+		}
+
+		#endregion
 	}
-
 }
-

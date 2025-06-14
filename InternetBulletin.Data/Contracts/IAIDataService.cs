@@ -7,7 +7,7 @@
 
 namespace InternetBulletin.Data.Contracts
 {
-	using InternetBulletin.Shared.DTOs;
+	using InternetBulletin.Shared.DTOs.AI;
 
 	/// <summary>
 	/// AI Data Services interface.

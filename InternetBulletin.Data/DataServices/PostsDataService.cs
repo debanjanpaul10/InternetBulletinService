@@ -10,7 +10,6 @@ namespace InternetBulletin.Data.DataServices
 	using InternetBulletin.Data.Contracts;
 	using InternetBulletin.Data.Entities;
 	using InternetBulletin.Shared.Constants;
-	using InternetBulletin.Shared.DTOs;
 	using InternetBulletin.Shared.DTOs.Posts;
 	using Microsoft.EntityFrameworkCore;
 	using Microsoft.Extensions.Logging;
@@ -113,12 +112,12 @@ namespace InternetBulletin.Data.DataServices
 			catch (DbUpdateException dbEx)
 			{
 				this._logger.LogError(dbEx, string.Format(LoggingConstants.LogHelperMethodFailed, nameof(AddNewPostAsync), DateTime.UtcNow, dbEx.Message));
-				return false;
+				throw;
 			}
 			catch (Exception ex)
 			{
 				this._logger.LogError(ex, string.Format(LoggingConstants.LogHelperMethodFailed, nameof(AddNewPostAsync), DateTime.UtcNow, ex.Message));
-				return false;
+				throw;
 			}
 			finally
 			{
@@ -166,12 +165,12 @@ namespace InternetBulletin.Data.DataServices
 			catch (DbUpdateException dbEx)
 			{
 				this._logger.LogError(dbEx, string.Format(LoggingConstants.LogHelperMethodFailed, nameof(UpdatePostAsync), DateTime.UtcNow, dbEx.Message));
-				return new Post();
+				throw;
 			}
 			catch (Exception ex)
 			{
 				this._logger.LogError(ex, string.Format(LoggingConstants.LogHelperMethodFailed, nameof(UpdatePostAsync), DateTime.UtcNow, ex.Message));
-				return new Post();
+				throw;
 			}
 			finally
 			{
@@ -211,12 +210,12 @@ namespace InternetBulletin.Data.DataServices
 			catch (DbUpdateException dbEx)
 			{
 				this._logger.LogError(dbEx, string.Format(LoggingConstants.LogHelperMethodFailed, nameof(DeletePostAsync), DateTime.UtcNow, dbEx.Message));
-				return false;
+				throw;
 			}
 			catch (Exception ex)
 			{
 				this._logger.LogError(ex, string.Format(LoggingConstants.LogHelperMethodFailed, nameof(DeletePostAsync), DateTime.UtcNow, ex.Message));
-				return false;
+				throw;
 			}
 			finally
 			{

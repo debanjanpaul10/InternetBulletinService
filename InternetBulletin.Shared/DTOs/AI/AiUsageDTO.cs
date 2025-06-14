@@ -5,7 +5,7 @@
 // <summary>The AI Usage DTO class.</summary>
 // *********************************************************************************
 
-namespace InternetBulletin.Shared.DTOs
+namespace InternetBulletin.Shared.DTOs.AI
 {
 	/// <summary>
 	/// The AI Usage DTO class.

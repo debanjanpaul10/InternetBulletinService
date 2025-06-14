@@ -127,7 +127,7 @@
         "EnvironmentVariables": [
             {
                 "name": "AppConfigurationEndpoint",
-                "value": "https://appcs-internet-bulletin-service.azconfig.io",
+                "value": "https://appcs-internet-bulletin.azconfig.io",
                 "slotSetting": true
             },
             {

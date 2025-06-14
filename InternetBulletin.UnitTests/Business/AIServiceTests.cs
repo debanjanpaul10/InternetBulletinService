@@ -7,6 +7,8 @@
 
 namespace InternetBulletin.UnitTests.Business
 {
+    using InternetBulletin.Shared.DTOs.AI;
+    using InternetBulletin.UnitTests.Helpers;
     using Newtonsoft.Json;
     using static InternetBulletin.UnitTests.Helpers.TestsHelper;
 
@@ -119,6 +121,100 @@ namespace InternetBulletin.UnitTests.Business
             // Act & Assert
             var actualException = await Assert.ThrowsAsync<HttpRequestException>(() => this._aiService.RewriteWithAIAsync(UserName, story));
             Assert.Same(expectedException, actualException);
+        }
+
+        /// <summary>
+        /// Tests that GenerateTagForStoryAsync returns the tag when the HTTP call is successful.
+        /// </summary>
+        [Fact]
+        public async Task GenerateTagForStoryAsync_SuccessfulResponse_ReturnsTag()
+        {
+            // Arrange
+            var story = PrepareMockRewriteRequestDTO();
+            var expectedTag = "Adventure";
+            var mockResponse = TestsHelper.PrepareMockTagResponseDTO(expectedTag);
+            var mockHttpResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(mockResponse))
+            };
+
+            this._mockHttpClientHelper
+                .Setup(x => x.GetIbbsAiResponseAsync(story, RouteConstants.GenerateTagApi_Route))
+                .ReturnsAsync(mockHttpResponse);
+
+            this._mockAiDataService
+                .Setup(x => x.SaveAiUsageDataAsync(It.IsAny<AiUsageDTO>()))
+                .ReturnsAsync(true);
+
+            // Act
+            var result = await this._aiService.GenerateTagForStoryAsync(UserName, story);
+
+            // Assert
+            Assert.Equal(expectedTag, result);
+        }
+
+        /// <summary>
+        /// Tests that GenerateTagForStoryAsync throws an exception when the HTTP call fails.
+        /// </summary>
+        [Fact]
+        public async Task GenerateTagForStoryAsync_HttpClientReturnsNullResponse_ThrowsException()
+        {
+            // Arrange
+            var story = PrepareMockRewriteRequestDTO();
+            this._mockHttpClientHelper
+                .Setup(x => x.GetIbbsAiResponseAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync((HttpResponseMessage)null!);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<NullReferenceException>(() => this._aiService.GenerateTagForStoryAsync(UserName, story));
+            Assert.NotNull(exception.Message);
+        }
+
+        /// <summary>
+        /// Tests that ModerateContentDataAsync returns the content rating when the HTTP call is successful.
+        /// </summary>
+        [Fact]
+        public async Task ModerateContentDataAsync_SuccessfulResponse_ReturnsContentRating()
+        {
+            // Arrange
+            var story = PrepareMockRewriteRequestDTO();
+            var expectedRating = "Safe";
+            var mockResponse = PrepareModerationContentResponseDTO(expectedRating);
+            var mockHttpResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(mockResponse))
+            };
+
+            this._mockHttpClientHelper
+                .Setup(x => x.GetIbbsAiResponseAsync(story, RouteConstants.ModerateContentApi_Route))
+                .ReturnsAsync(mockHttpResponse);
+
+            this._mockAiDataService
+                .Setup(x => x.SaveAiUsageDataAsync(It.IsAny<AiUsageDTO>()))
+                .ReturnsAsync(true);
+
+            // Act
+            var result = await this._aiService.ModerateContentDataAsync(UserName, story);
+
+            // Assert
+            Assert.Equal(expectedRating, result);
+        }
+
+        /// <summary>
+        /// Tests that ModerateContentDataAsync throws an exception when the HTTP call fails.
+        /// </summary>
+        [Fact]
+        public async Task ModerateContentDataAsync_HttpClientReturnsNullResponse_ThrowsException()
+        {
+            // Arrange
+            var story = PrepareMockRewriteRequestDTO();
+            this._mockHttpClientHelper
+                .Setup(x => x.GetIbbsAiResponseAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync((HttpResponseMessage)null!);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<NullReferenceException>(() => this._aiService.ModerateContentDataAsync(UserName, story));
+            Assert.NotNull(exception.Message);
         }
     }
 }

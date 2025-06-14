@@ -1,5 +1,4 @@
 ﻿global using InternetBulletin.Business.Services;
-global using InternetBulletin.Data.Entities;
 global using Microsoft.Extensions.Caching.Memory;
 global using Microsoft.Extensions.Logging;
 global using Moq;
@@ -12,3 +11,4 @@ global using System.Net;
 global using InternetBulletin.Shared.Constants;
 global using InternetBulletin.Business.Contracts;
 global using Microsoft.Extensions.Configuration;
+global using static InternetBulletin.UnitTests.Helpers.TestsHelper;

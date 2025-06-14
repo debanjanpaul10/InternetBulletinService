@@ -5,11 +5,15 @@
 // <summary>Cache keys.</summary>
 // *********************************************************************************
 
+
 namespace InternetBulletin.Shared.Constants
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Cache keys.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class CacheKeys
     {
         /// <summary>

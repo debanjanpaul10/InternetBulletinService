@@ -31,13 +31,13 @@ namespace InternetBulletin.Data.DataServices
         public async Task<bool> SaveUsersDataAsync(List<GraphUserDTO> usersData)
         {
             var existingUsersData = await this._dbContext.Users.Where(x => x.IsActive).ToListAsync();
-            
+
             // Get the IDs of existing users
             var existingUserIds = existingUsersData.Select(x => x.Id).ToHashSet();
-            
+
             // Filter out users that already exist
             var newUsers = usersData.Where(x => !existingUserIds.Contains(x.Id)).ToList();
-            
+
             if (newUsers.Count == 0)
             {
                 return true; // No new users to save
@@ -56,7 +56,7 @@ namespace InternetBulletin.Data.DataServices
 
             await this._dbContext.Users.AddRangeAsync(usersToAdd);
             await this._dbContext.SaveChangesAsync();
-            
+
             return true;
         }
     }

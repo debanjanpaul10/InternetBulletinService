@@ -5,7 +5,7 @@
 // <summary>The Rewrite response data DTO.</summary>
 // *********************************************************************************
 
-namespace InternetBulletin.Shared.DTOs.Posts
+namespace InternetBulletin.Shared.DTOs.AI
 {
 	/// <summary>
 	/// The Rewrite response data DTO.

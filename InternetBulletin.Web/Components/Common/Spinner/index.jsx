@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import AppLogo from "@assets/Images/IBBS_logo.png";
-import ThemeContext from "@context/ThemeContext";
 import { useStyles } from "./styles";
 
 /**
@@ -14,22 +13,20 @@ import { useStyles } from "./styles";
  * @returns {JSX.Element}
  */
 function Spinner({ isLoading }) {
-	const { themeMode } = useContext(ThemeContext);
-	const styles = useStyles();
-	const spinnerStyles = themeMode === "dark" ? styles.spinnerPageDark : styles.spinnerPageLight;
+    const styles = useStyles();
 
-	return (
-		isLoading && (
-			<div className={spinnerStyles}>
-				<img
-					src={AppLogo}
-					height={"100px"}
-					className="heartbeat"
-					alt="Loading..."
-				/>
-			</div>
-		)
-	);
+    return (
+        isLoading && (
+            <div className={styles.spinnerPageDark}>
+                <img
+                    src={AppLogo}
+                    height={"100px"}
+                    className="heartbeat"
+                    alt="Loading..."
+                />
+            </div>
+        )
+    );
 }
 
 export default Spinner;

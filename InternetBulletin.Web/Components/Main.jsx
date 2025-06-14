@@ -36,7 +36,7 @@ import { CookiesConstants, PageConstants } from "@helpers/ibbs.constants";
  */
 function Main({ msalInstance }) {
     const { DarkModeConstant, LightConstant, DarkConstant } = PageConstants;
-    const [themeMode, setThemeMode] = useState(LightConstant);
+    const [themeMode, setThemeMode] = useState(DarkConstant);
     const [initialized, setInitialized] = useState(false);
 
     useEffect(() => {

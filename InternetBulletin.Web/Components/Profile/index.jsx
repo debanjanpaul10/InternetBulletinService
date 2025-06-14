@@ -13,6 +13,7 @@ import PageNotFound from "@components/Common/PageNotFound";
 import UserPostsComponent from "./Components/UserPosts";
 import UserRatingsComponent from "./Components/UserRatings";
 import BlurText from "@animations/BlurText";
+import Magnet from "@animations/Magnet";
 
 /**
  * @component
@@ -155,11 +156,13 @@ function ProfileComponent() {
                         <div className="row">
                             <div className="col-12 col-sm-2">
                                 <div className={styles.imageContainer}>
-                                    <img
-                                        src={AlienImage}
-                                        alt="Profile"
-                                        className={styles.profileImage}
-                                    />
+                                    <Magnet disabled={false} magnetStrength={5}>
+                                        <img
+                                            src={AlienImage}
+                                            alt="Profile"
+                                            className={styles.profileImage}
+                                        />
+                                    </Magnet>
                                 </div>
                             </div>
                             <div className="col-12 col-sm-10">

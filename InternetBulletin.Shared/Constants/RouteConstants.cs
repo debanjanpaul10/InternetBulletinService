@@ -162,6 +162,16 @@ namespace InternetBulletin.Shared.Constants
 		/// </summary>
 		public const string RewriteTextApi_Route = "BulletinAI/RewriteText";
 
+		/// <summary>
+		/// The generate tag api route.
+		/// </summary>
+		public const string GenerateTagApi_Route = "BulletinAI/GenerateTag";
+
+		/// <summary>
+		/// The moderate content api route.
+		/// </summary>
+		public const string ModerateContentApi_Route = "BulletinAI/ModerateContent";
+
 		#endregion
 
 		#region BulletinServices
@@ -185,6 +195,16 @@ namespace InternetBulletin.Shared.Constants
 		/// The Application information data
 		/// </summary>
 		public const string GetAboutUsData_Route = "GetAboutUsData";
+
+		/// <summary>
+		/// The generate genre tag route.
+		/// </summary>
+		public const string GenerateGenreTag_Route = "GenerateGenreTag";
+
+		/// <summary>
+		/// The moderate content route.
+		/// </summary>
+		public const string ModerateContent_Route = "ModerateContent";
 
 		#endregion
 	}

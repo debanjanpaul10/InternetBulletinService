@@ -1,16 +1,16 @@
 ﻿// *********************************************************************************
-//	<copyright file="RewriteRequestDTO.cs" company="Personal">
+//	<copyright file="UserStoryRequestDTO.cs" company="Personal">
 //		Copyright (c) 2025 Personal
 //	</copyright>
-// <summary>The Rewrite Request dto.</summary>
+// <summary>The User Story Request dto.</summary>
 // *********************************************************************************
 
-namespace InternetBulletin.Shared.DTOs.Posts
+namespace InternetBulletin.Shared.DTOs.AI
 {
 	/// <summary>
-	/// The Rewrite Request dto.
+	/// The User Story Request dto.
 	/// </summary>
-	public class RewriteRequestDTO
+	public class UserStoryRequestDTO
 	{
 		/// <summary>
 		/// Gets or sets the story.
