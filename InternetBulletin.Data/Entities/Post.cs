@@ -60,6 +60,30 @@ namespace InternetBulletin.Data.Entities
 		public int Ratings { get; set; }
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this instance is NSFW.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this instance is NSFW; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsNSFW { get; set; }
+
+		/// <summary>
+		/// Gets or sets the genre tag.
+		/// </summary>
+		/// <value>
+		/// The genre tag.
+		/// </value>
+		public string GenreTag { get; set; } = string.Empty;
+
+		/// <summary>
+		/// Gets or sets the post modified date.
+		/// </summary>
+		/// <value>
+		/// The post modifed date.
+		/// </value>
+		public DateTime PostModifiedDate { get; set; }
+
+		/// <summary>
 		/// Gets or sets a value indicating whether this instance is active.
 		/// </summary>
 		/// <value>

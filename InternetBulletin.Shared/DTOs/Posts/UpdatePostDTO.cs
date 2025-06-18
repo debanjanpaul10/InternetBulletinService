@@ -43,5 +43,21 @@ namespace InternetBulletin.Shared.DTOs.Posts
 		/// The post rating.
 		/// </value>
 		public int? PostRating { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is NSFW.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this instance is NSFW; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsNSFW { get; set; }
+
+		/// <summary>
+		/// Gets or sets the genre tag.
+		/// </summary>
+		/// <value>
+		/// The genre tag.
+		/// </value>
+		public string GenreTag { get; set; } = string.Empty;
 	}
 }

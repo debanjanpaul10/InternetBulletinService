@@ -97,6 +97,9 @@ namespace InternetBulletin.Data
 				entity.Property(e => e.PostCreatedDate).HasColumnType(DateTimeDataTypeConstant).IsRequired();
 				entity.Property(e => e.PostOwnerUserName).HasColumnType(NVarCharMaxDataTypeConstant).IsRequired();
 				entity.Property(e => e.Ratings).HasColumnType(IntegerDataTypeConstant).HasDefaultValue(0).IsRequired();
+				entity.Property(e => e.IsNSFW).HasColumnType(BitDataTypeConstant).HasDefaultValue(0).IsRequired();
+				entity.Property(e => e.GenreTag).HasColumnType(NVarCharMaxDataTypeConstant).IsRequired();
+				entity.Property(e => e.PostModifiedDate).HasColumnType(DateTimeDataTypeConstant).IsRequired();
 				entity.Property(e => e.IsActive).HasColumnType(BitDataTypeConstant).HasDefaultValue(1).IsRequired();
 			});
 

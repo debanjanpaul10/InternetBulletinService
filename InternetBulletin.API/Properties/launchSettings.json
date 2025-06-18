@@ -1,29 +1,15 @@
 {
-  "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IBBS API": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "applicationUrl": "https://localhost:44352",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "IsDevelopmentMode": "true"
-      }
-    }
-  },
-  "$schema": "https://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:51859/",
-      "sslPort": 44352
-    }
-  }
+	"profiles": {
+		"IBBS API": {
+			"commandName": "Project",
+			"dotnetRunMessages": true,
+			"launchBrowser": false,
+			"applicationUrl": "https://localhost:44352;http://localhost:44351",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development",
+				"IsDevelopmentMode": "true"
+			}
+		}
+	},
+	"$schema": "https://json.schemastore.org/launchsettings.json"
 }

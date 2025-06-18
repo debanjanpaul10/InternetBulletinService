@@ -13,6 +13,7 @@ namespace InternetBulletin.Business.Services
 	using InternetBulletin.Shared.DTOs.AI;
 	using InternetBulletin.Shared.Helpers;
 	using Newtonsoft.Json;
+	using System.Text.RegularExpressions;
 
 	/// <summary>
 	/// The AI Service class.
@@ -57,7 +58,7 @@ namespace InternetBulletin.Business.Services
 		{
 			var generateTagUrl = RouteConstants.GenerateTagApi_Route;
 			var aiResponse = await this.ProcessAIRequestAsync<TagResponseDTO>(requestDTO, generateTagUrl, userName, AiUsages.GenreTag);
-			return aiResponse.UserStoryTag;
+			return Regex.Replace(aiResponse.UserStoryTag, "<[^>]*>?", string.Empty).Trim();
 		}
 
 		/// <summary>
@@ -71,7 +72,7 @@ namespace InternetBulletin.Business.Services
 		{
 			var moderateContentUrl = RouteConstants.ModerateContentApi_Route;
 			var aiResponse = await this.ProcessAIRequestAsync<ModerationContentResponseDTO>(requestDTO, moderateContentUrl, userName, AiUsages.ModerateContent);
-			return aiResponse.ContentRating;
+			return Regex.Replace(aiResponse.ContentRating, "<[^>]*>?", string.Empty).Trim();
 		}
 
 		#region PRIVATE Methods

@@ -3,32 +3,33 @@ import { useDispatch, useSelector } from "react-redux";
 import ReactQuill from "react-quill-new";
 import { useNavigate } from "react-router-dom";
 import {
-    Card,
-    CardPreview,
-    Button,
-    CardHeader,
-    Tooltip,
-    SkeletonItem,
-    Skeleton,
+	CardPreview,
+	Button,
+	CardHeader,
+	Tooltip,
+	TagGroup,
+	Tag,
 } from "@fluentui/react-components";
 import { useMsal } from "@azure/msal-react";
 
+import { BlankTextErrorMessageConstant, CreatePostPageConstants, NSFWConstant } from "@helpers/ibbs.constants";
 import {
-    CreatePostPageConstants,
-    HeaderPageConstants,
-} from "@helpers/ibbs.constants";
-import { AddNewPostAsync, RewriteStoryWithAiAsync } from "@store/Posts/Actions";
+	AddNewPostAsync,
+	HandlePostAiModerationTasksAsync,
+	HandlePostAiModerationTasksSuccess,
+} from "@store/Posts/Actions";
 import AddPostDtoModel from "@models/AddPostDto";
 import PageNotFound from "@components/Common/PageNotFound";
-import AiButton from "@assets/Images/ai-icon.svg";
-import RewriteRequestDtoModel from "@models/RewriteRequestDto";
+import UserStoryRequestDtoModel from "@models/UserStoryRequestDto";
 import Spinner from "@components/Common/Spinner";
 import { useStyles } from "@components/Posts/Components/CreatePost/styles";
 import { loginRequests } from "@services/auth.config";
 import { UserNameConstant } from "@helpers/config.constants";
 import SpotlightCard from "@animations/SpotlightCard";
 import BlurText from "@animations/BlurText";
-import ShinyText from "@animations/ShinyText";
+import CancelModalComponent from "../CancelModal";
+import RewriteTextComponent from "../RewriteText";
+import GradientText from "@animations/GradientText";
 
 /**
  * @component
@@ -48,372 +49,427 @@ import ShinyText from "@animations/ShinyText";
  * @state {Object} postData - Contains the post information (Title, Content, CreatedBy)
  * @state {Object} errors - Contains validation errors for the form
  * @state {Object} currentLoggedInUser - Stores the current authenticated user information
+ * @state {Object} isDialogOpen - Indicates whether the confirmation dialog is open
  *
  * @function handleCreatePost - Handles form submission and post creation
  * @function handleFormChange - Manages form input changes
  * @function handleContentChange - Manages rich text editor content changes
- * @function handleAiRewrite - Handles AI-powered content rewriting
  * @function handleCancelClick - Handles navigation back to home page
+ * @function handleConfirmCancel - Handles confirmation of cancellation
  *
  * @returns {JSX.Element} Returns either the post creation form or a PageNotFound component based on authentication status
  */
 function CreatePostComponent() {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const styles = useStyles();
-    const { instance, accounts } = useMsal();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const styles = useStyles();
+	const { instance, accounts } = useMsal();
 
-    const IsCreatePostLoadingStoreData = useSelector(
-        (state) => state.PostsReducer.isCreatePostLoading
-    );
-    const AiRewrittenStoryStoreData = useSelector(
-        (state) => state.PostsReducer.aiRewrittenStory
-    );
-    const IsRewriteLoadingStoreData = useSelector(
-        (state) => state.PostsReducer.isRewriteLoading
-    );
+	const IsCreatePostLoadingStoreData = useSelector(
+		(state) => state.PostsReducer.isCreatePostLoading
+	);
+	const AiRewrittenStoryStoreData = useSelector(
+		(state) => state.PostsReducer.aiRewrittenStory
+	);
+	const IsRewriteLoadingStoreData = useSelector(
+		(state) => state.PostsReducer.isRewriteLoading
+	);
+	const AIModerationStoreData = useSelector(
+		(state) => state.PostsReducer.aiModerationData
+	);
 
-    const [postData, setPostData] = useState({
-        Title: "",
-        Content: "",
-        CreatedBy: "",
-    });
-    const [errors, setErrors] = useState({
-        Title: "",
-        Content: "",
-    });
-    const [currentLoggedInUser, setCurrentLoggedInUser] = useState({});
+	const [postData, setPostData] = useState({
+		Title: "",
+		Content: "",
+		CreatedBy: "",
+		isNsfw: false,
+		genreTag: "",
+	});
+	const [errors, setErrors] = useState({
+		Title: "",
+		Content: "",
+	});
+	const [currentLoggedInUser, setCurrentLoggedInUser] = useState({});
 
-    useEffect(() => {
-        if (accounts.length > 0) {
-            const userName = accounts[0].idTokenClaims[UserNameConstant];
-            setCurrentLoggedInUser(userName);
-        } else {
-            setCurrentLoggedInUser();
-        }
-    }, [instance, accounts]);
+	// #region Side Effects
 
-    useEffect(() => {
-        if (
-            AiRewrittenStoryStoreData !== "" &&
-            postData.Content !== "" &&
-            AiRewrittenStoryStoreData !== postData.Content
-        ) {
-            setPostData({
-                ...postData,
-                Content: AiRewrittenStoryStoreData,
-            });
-        }
-    }, [AiRewrittenStoryStoreData]);
+	useEffect(() => {
+		if (accounts.length > 0) {
+			const userName = accounts[0].idTokenClaims[UserNameConstant];
+			setCurrentLoggedInUser(userName);
+		} else {
+			setCurrentLoggedInUser();
+		}
+	}, [instance, accounts]);
 
-    /**
-     * Gets the access token silently using msal.
-     * @returns {string} The access token.
-     */
-    const getAccessToken = async () => {
-        const tokenResponse = await instance.acquireTokenSilent({
-            ...loginRequests,
-            account: accounts[0],
-        });
+	useEffect(() => {
+		return () => {
+			dispatch(HandlePostAiModerationTasksSuccess(null, null));
+			setPostData({
+				Title: "",
+				Content: "",
+				CreatedBy: "",
+				isNsfw: false,
+				genreTag: "",
+			});
+		};
+	}, []);
 
-        return tokenResponse.idToken;
-    };
+	/**
+	 * Memoized function to process moderation data from AI.
+	 * @returns {Object|null} Processed moderation data containing nsfwTag and genreTag, or null if no data.
+	 */
+	const processModerationData = useMemo(() => {
+		if (
+			!AIModerationStoreData ||
+			Object.values(AIModerationStoreData).length === 0
+		) {
+			return null;
+		}
 
-    /**
-     * Checks if user logged in.
-     * @returns {boolean} The boolean value of user login.
-     */
-    const isUserLoggedIn = () => {
-        return (
-            currentLoggedInUser !== null &&
-            currentLoggedInUser !== undefined &&
-            currentLoggedInUser?.username !== ""
-        );
-    };
+		const nsfwTag = AIModerationStoreData?.moderationData
+			?.replace(/<[^>]*>?/gm, "")
+			.trim();
+		const genreTag = AIModerationStoreData?.tagData
+			?.replace(/<[^>]*>?/gm, "")
+			.trim();
 
-    /**
-     * Handles the form submit event.
-     * @param {Event} event The submit event.
-     */
-    const handleCreatePost = async (event) => {
-        event.preventDefault();
+		return { nsfwTag, genreTag };
+	}, [AIModerationStoreData]);
 
-        const validations = CreatePostPageConstants.validations;
-        errors.Title =
-            postData.Title === ""
-                ? validations.TitleRequired
-                : postData.Title.length > 50
-                ? validations.MaxTitleLength
-                : "";
-        errors.Content =
-            postData.Content === "" ? validations.ContentRequired : "";
-        setErrors({ ...errors });
+	useEffect(() => {
+		if (!processModerationData) return;
 
-        if (errors.Content === "" && errors.Title === "") {
-            const addPostData = new AddPostDtoModel(
-                postData.Title,
-                postData.Content,
-                postData.CreatedBy
-            );
+		const { nsfwTag, genreTag } = processModerationData;
 
-            const accessToken = await getAccessToken();
-            dispatch(AddNewPostAsync(addPostData, accessToken))
-                .then(() => {
-                    navigate("/");
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
-    };
+		setPostData((prevState) => {
+			const updates = {};
 
-    /**
-     * Handles the form change event.
-     * @param {Event} event The on change event.
-     */
-    const handleFormChange = (event) => {
-        event.persist();
-        const target = event.target;
-        const value = target.value;
+			if (nsfwTag && prevState.isNsfw !== (nsfwTag === "NSFW")) {
+				updates.isNsfw = nsfwTag === "NSFW";
+			}
 
-        // Add character limit validation for title
-        if (target.name === "Title") {
-            if (value.length > 50) {
-                setErrors({
-                    ...errors,
-                    Title: CreatePostPageConstants.validations.MaxTitleLength,
-                });
-                return;
-            } else {
-                // Clear the error if length is valid
-                setErrors({
-                    ...errors,
-                    Title: "",
-                });
-            }
-        }
+			if (genreTag && prevState.genreTag !== genreTag) {
+				updates.genreTag = genreTag;
+			}
 
-        setPostData({
-            ...postData,
-            [target.name]: value,
-        });
-    };
+			return Object.keys(updates).length > 0
+				? { ...prevState, ...updates }
+				: prevState;
+		});
+	}, [processModerationData]);
 
-    /**
-     * Handles the key down event to prevent form submission on Enter key press.
-     * @param {Event} event The key down event.
-     */
-    const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-        }
-    };
+	// #endregion
 
-    /**
-     * Handles the content change event for the rich text editor.
-     * @param {string} content The content of the editor.
-     */
-    const handleContentChange = useMemo(
-        () => (content) => {
-            setPostData({
-                ...postData,
-                Content: content,
-            });
-        },
-        [postData]
-    );
+	/**
+	 * Gets the access token silently using msal.
+	 * @returns {Promise<string>} The access token.
+	 */
+	const getAccessToken = async () => {
+		const tokenResponse = await instance.acquireTokenSilent({
+			...loginRequests,
+			account: accounts[0],
+		});
 
-    /**
-     * Handles the ai rewrite event.
-     * @param {Event} event The rewrite event.
-     */
-    const handleAiRewrite = async (event) => {
-        event.preventDefault();
-        const strippedContent = postData.Content.replace(
-            /<[^>]*>?/gm,
-            ""
-        ).trim();
-        if (strippedContent !== "") {
-            var requestDto = new RewriteRequestDtoModel(postData.Content);
-            const accessToken = await getAccessToken();
-            dispatch(RewriteStoryWithAiAsync(requestDto, accessToken));
-        }
-    };
+		return tokenResponse.idToken;
+	};
 
-    /**
-     * The modules for React Quill
-     */
-    const modules = useMemo(
-        () => ({
-            toolbar: {
-                container: [
-                    [{ header: "1" }, { header: "2" }],
-                    ["bold", "italic", "underline", "blockquote"],
-                    [{ list: "ordered" }, { list: "bullet" }],
-                    ["link"],
-                    ["clean"],
-                ],
-            },
-        }),
-        []
-    );
+	/**
+	 * Checks if user is logged in.
+	 * @returns {boolean} True if user is logged in, false otherwise.
+	 */
+	const isUserLoggedIn = () => {
+		return (
+			currentLoggedInUser !== null &&
+			currentLoggedInUser !== undefined &&
+			currentLoggedInUser?.username !== ""
+		);
+	};
 
-    /**
-     * Handles the cancel click event.
-     */
-    const handleCancelClick = () => {
-        navigate(HeaderPageConstants.Headings.Home.Link);
-    };
+	/**
+	 * Handles the form submit event for creating a new post.
+	 * @param {Event} event - The submit event.
+	 * @returns {Promise<void>}
+	 */
+	const handleCreatePost = async (event) => {
+		event.preventDefault();
 
-    return isUserLoggedIn() ? (
-        <div className="container d-flex flex-column mt-5">
-            <Spinner isLoading={IsCreatePostLoadingStoreData} />
-            <div className="row">
-                <div className="col-sm-12">
-                    <BlurText
-                        text={CreatePostPageConstants.Headings.Header}
-                        delay={150}
-                        animateBy="words"
-                        direction="top"
-                        className={styles.addNewHeading}
-                    />
-                </div>
-                <form onKeyDown={handleKeyDown} className="addpost">
-                    <SpotlightCard
-                        className={`custom-spotlight-card ${styles.card}`}
-                        spotlightColor="rgba(0, 229, 255, 0.2)"
-                    >
-                        <CardHeader
-                            className={styles.cardHeader}
-                            header={
-                                <div className="col sm-12 mb-3 mb-sm-0">
-                                    <div className="row p-2">
-                                        <input
-                                            type="text"
-                                            name="Title"
-                                            onChange={handleFormChange}
-                                            value={postData.Title}
-                                            className="form-control mt-0"
-                                            id="Title"
-                                            placeholder={
-                                                CreatePostPageConstants.Headings
-                                                    .TitleBarPlaceholder
-                                            }
-                                        />
-                                        {errors.Title && (
-                                            <span className="alert alert-danger ml-10 mt-3">
-                                                {errors.Title}
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-                            }
-                        />
-                        <CardPreview className={styles.cardPreview}>
-                            <div className="form-group row mt-3">
-                                <div className="col sm-12 mb-3 mb-sm-0 p-3">
-                                    {IsRewriteLoadingStoreData ? (
-                                        <Skeleton
-                                            aria-label="Profile data loading"
-                                            as="div"
-                                            className="row"
-                                        >
-                                            <div className="col-12 col-sm-12">
-                                                <SkeletonItem
-                                                    className={
-                                                        styles.rewriteTextSkeleton
-                                                    }
-                                                    appearance="translucent"
-                                                    animation="pulse"
-                                                    as="div"
-                                                    size={128}
-                                                />
-                                            </div>
-                                        </Skeleton>
-                                    ) : (
-                                        <>
-                                            <ReactQuill
-                                                value={postData.Content}
-                                                onChange={handleContentChange}
-                                                id="Content"
-                                                className="text-editor"
-                                                placeholder={
-                                                    CreatePostPageConstants
-                                                        .Headings
-                                                        .ContentBoxPlaceholder
-                                                }
-                                                modules={modules}
-                                            />
-                                            {errors.Content && (
-                                                <span className="alert alert-danger ml-10 mt-3">
-                                                    {errors.Content}
-                                                </span>
-                                            )}
-                                            <Tooltip
-                                                content={
-                                                    CreatePostPageConstants
-                                                        .Headings
-                                                        .RewriteAIButtonTexts
-                                                        .TooltipText
-                                                }
-                                                relationship="label"
-                                                positioning="after"
-                                            >
-                                                <Button
-                                                    type="button"
-                                                    className={
-                                                        styles.aiEditButton
-                                                    }
-                                                    onClick={handleAiRewrite}
-                                                >
-                                                    <img
-                                                        src={AiButton}
-                                                        style={{
-                                                            height: "20px",
-                                                            marginRight: "10px",
-                                                        }}
-                                                    />
-                                                    <ShinyText
-                                                        text={
-                                                            CreatePostPageConstants
-                                                                .Headings
-                                                                .RewriteAIButtonTexts
-                                                                .ButtonText
-                                                        }
-                                                        disabled={false}
-                                                        speed={3}
-                                                    />
-                                                </Button>
-                                            </Tooltip>
-                                        </>
-                                    )}
-                                </div>
+		const validations = CreatePostPageConstants.validations;
+		const postTitleValidation = postData.Title.length > 50
+			? validations.MaxTitleLength
+			: "";
 
-                                <div className="text-center">
-                                    <Button
-                                        type="submit"
-                                        onClick={handleCreatePost}
-                                        className={styles.createButton}
-                                    >
-                                        {"Create"}
-                                    </Button>
-                                    &nbsp;
-                                    <Button
-                                        className={styles.cancelButton}
-                                        onClick={handleCancelClick}
-                                    >
-                                        {"Cancel"}
-                                    </Button>
-                                </div>
-                            </div>
-                        </CardPreview>
-                    </SpotlightCard>
-                </form>
-            </div>
-        </div>
-    ) : (
-        <PageNotFound />
-    );
+		errors.Title =
+			postData.Title === ""
+				? validations.TitleRequired
+				: postTitleValidation;
+		errors.Content =
+			postData.Content === "" ? validations.ContentRequired : "";
+		setErrors({ ...errors });
+
+		if (errors.Content === "" && errors.Title === "") {
+			const addPostData = new AddPostDtoModel(
+				postData.Title,
+				postData.Content,
+				postData.CreatedBy,
+				postData.isNsfw,
+				postData.genreTag
+			);
+
+			const accessToken = await getAccessToken();
+			dispatch(AddNewPostAsync(addPostData, accessToken))
+				.then(() => {
+					dispatch(HandlePostAiModerationTasksSuccess(null, null));
+					navigate("/");
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	};
+
+	/**
+	 * Handles the form change event for input fields.
+	 * @param {Event} event - The change event.
+	 */
+	const handleFormChange = (event) => {
+		event.persist();
+		const target = event.target;
+		const value = target.value;
+
+		// Add character limit validation for title
+		if (target.name === "Title") {
+			if (value.length > 50) {
+				setErrors({
+					...errors,
+					Title: CreatePostPageConstants.validations.MaxTitleLength,
+				});
+				return;
+			} else {
+				// Clear the error if length is valid
+				setErrors({
+					...errors,
+					Title: "",
+				});
+			}
+		}
+
+		setPostData({
+			...postData,
+			[target.name]: value,
+		});
+	};
+
+	/**
+	 * Handles the key down event to prevent form submission on Enter key press.
+	 * @param {KeyboardEvent} event - The key down event.
+	 */
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			event.preventDefault();
+		}
+	};
+
+	/**
+	 * Handles the content change event for the rich text editor.
+	 * @param {string} content - The content of the editor.
+	 */
+	const handleContentChange = useMemo(
+		() => (content) => {
+			setPostData({
+				...postData,
+				Content: content,
+			});
+		},
+		[postData]
+	);
+
+	/**
+	 * The modules for React Quill
+	 */
+	const modules = useMemo(
+		() => ({
+			toolbar: {
+				container: [
+					[{ header: "1" }, { header: "2" }],
+					["bold", "italic", "underline", "blockquote"],
+					[{ list: "ordered" }, { list: "bullet" }],
+					["link"],
+					["clean"],
+				],
+			},
+		}),
+		[]
+	);
+
+	/**
+	 * Renders the create post action buttons based on moderation state.
+	 * @returns {JSX.Element} The rendered buttons component.
+	 */
+	const renderCreatePostButtons = () => {
+		return (
+			<div className="text-center">
+				{AIModerationStoreData?.moderationData &&
+					AIModerationStoreData?.tagData ? (
+					<Button
+						type="submit"
+						onClick={handleCreatePost}
+						className={styles.createButton}
+					>
+						{"Create"}
+					</Button>
+				) : (
+					<Tooltip
+						content={
+							CreatePostPageConstants.Headings
+								.ModerateWithAIButtonTexts.TooltipText
+						}
+						relationship="label"
+						positioning="top"
+					>
+						<Button
+							type="submit"
+							onClick={handleModerateButtonClick}
+							className={styles.moderateWithAiButton}
+						>
+							<GradientText>{CreatePostPageConstants.Headings
+								.ModerateWithAIButtonTexts.ButtonText}</GradientText>
+						</Button>
+					</Tooltip>
+				)}
+				&nbsp;&nbsp;
+				<CancelModalComponent />
+			</div>
+		);
+	};
+
+	/**
+	 * Renders the moderation tags based on AI moderation results.
+	 * @returns {JSX.Element} The rendered tags component.
+	 */
+	const renderTags = () => {
+		const tagData = AIModerationStoreData?.tagData;
+		const moderationData = AIModerationStoreData?.moderationData;
+		return (
+			<TagGroup>
+				{moderationData === NSFWConstant && (
+					<Tag className={styles.nsfwTag}>{moderationData}</Tag>
+				)}
+				{tagData && <Tag className={styles.genreTag}>{tagData}</Tag>}
+			</TagGroup>
+		);
+	};
+
+	/**
+	 * Handles the moderation button click event to process content through AI moderation.
+	 * @param {Event} event - The click event.
+	 * @returns {Promise<void>}
+	 */
+	const handleModerateButtonClick = async (event) => {
+		event.preventDefault();
+
+		const strippedContent = postData.Content.replace(
+			/<[^>]*>?/gm,
+			""
+		).trim();
+		if (strippedContent !== "") {
+			const requestDto = new UserStoryRequestDtoModel(strippedContent);
+			const accessToken = await getAccessToken();
+			dispatch(HandlePostAiModerationTasksAsync(requestDto, accessToken));
+		} else {
+			alert(BlankTextErrorMessageConstant);
+		}
+	};
+
+	return isUserLoggedIn() ? (
+		<div className="container d-flex flex-column mt-5">
+			<Spinner isLoading={IsCreatePostLoadingStoreData} />
+			<div className="row">
+				<div className="col-sm-12">
+					<BlurText
+						text={CreatePostPageConstants.Headings.Header}
+						delay={150}
+						animateBy="words"
+						direction="top"
+						className={styles.addNewHeading}
+					/>
+				</div>
+				<form onKeyDown={handleKeyDown} className="addpost">
+					<SpotlightCard
+						className={`custom-spotlight-card ${styles.card}`}
+						spotlightColor="rgba(0, 229, 255, 0.2)"
+					>
+						<CardHeader
+							className={styles.cardHeader}
+							header={
+								<div className="col sm-12 mb-3 mb-sm-0">
+									<div className="row p-2">
+										<input
+											type="text"
+											name="Title"
+											onChange={handleFormChange}
+											value={postData.Title}
+											className={`form-control mt-0 ${styles.cardHeaderText}`}
+											id="Title"
+											placeholder={
+												CreatePostPageConstants.Headings
+													.TitleBarPlaceholder
+											}
+										/>
+										{errors.Title && (
+											<span className="alert alert-danger ml-10 mt-3">
+												{errors.Title}
+											</span>
+										)}
+									</div>
+								</div>
+							}
+						/>
+						<CardPreview className={styles.cardPreview}>
+							<div className="form-group row mt-3">
+								<div className="col sm-12 mb-3 mb-sm-0 p-3">
+									<ReactQuill
+										value={postData.Content}
+										onChange={handleContentChange}
+										id="Content"
+										className={styles.textEditor}
+										placeholder={
+											CreatePostPageConstants
+												.Headings
+												.ContentBoxPlaceholder
+										}
+										modules={modules}
+									/>
+									{errors.Content && (
+										<span className="alert alert-danger ml-10 mt-3">
+											{errors.Content}
+										</span>
+									)}
+									<RewriteTextComponent
+										originalText={postData.Content}
+										onTextChange={(newText) => {
+											setPostData({
+												...postData,
+												Content: newText
+											});
+										}}
+									/>
+									&nbsp;
+									<span className="ms-3">
+										{renderTags()}
+									</span>
+
+								</div>
+								{renderCreatePostButtons()}
+							</div>
+						</CardPreview>
+					</SpotlightCard>
+				</form>
+			</div>
+		</div>
+	) : (
+		<PageNotFound />
+	);
 }
 
 export default CreatePostComponent;

@@ -1,7 +1,7 @@
 /**
- * RewriteRequestDtoModel class to represent the rewrite request model.
+ * UserStoryRequestDtoModel class to represent the ai request model.
  */
-class RewriteRequestDtoModel {
+class UserStoryRequestDtoModel {
     /**
      * The story.
      * @type {string}
@@ -9,7 +9,7 @@ class RewriteRequestDtoModel {
     story = "";
 
     /**
-     * Creates an instance of RewriteRequestDtoModel
+     * Creates an instance of UserStoryRequestDtoModel
      * @param {string} Story The story.
      */
     constructor(Story) {
@@ -17,4 +17,4 @@ class RewriteRequestDtoModel {
     }
 }
 
-export default RewriteRequestDtoModel;
+export default UserStoryRequestDtoModel;

@@ -6,5 +6,8 @@ CREATE TABLE [dbo].[Posts]
   [PostCreatedDate] DATETIME NOT NULL,
   [PostOwnerUserName] NVARCHAR(MAX) NOT NULL,
   [Ratings] INT NULL DEFAULT 0,
-  [IsActive] BIT NOT NULL DEFAULT 1
+  [IsNSFW] BIT NULL,
+  [GenreTag] NVARCHAR(MAX) NULL,
+  [PostModifedDate] DATETIME NOT NULL DEFAULT GETUTCDATE(),
+  [IsActive] BIT NOT NULL DEFAULT 1,
 )

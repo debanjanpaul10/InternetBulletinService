@@ -81,7 +81,7 @@ namespace InternetBulletin.Data.DataServices
 		{
 			try
 			{
-				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodStart, nameof(AddNewPostAsync), DateTime.UtcNow, newPost.PostTitle));
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodStart, nameof(AddNewPostAsync), DateTime.UtcNow, userName));
 
 				var postId = Guid.NewGuid();
 				var existingPost = await this._dbContext.Posts.AnyAsync(x => x.PostId == postId && x.IsActive);
@@ -95,7 +95,10 @@ namespace InternetBulletin.Data.DataServices
 						IsActive = true,
 						PostCreatedDate = DateTime.UtcNow,
 						PostOwnerUserName = userName,
-						Ratings = 0
+						Ratings = 0,
+						PostModifiedDate = DateTime.UtcNow,
+						GenreTag = newPost.GenreTag,
+						IsNSFW = newPost.IsNSFW,
 					};
 					await this._dbContext.Posts.AddAsync(dbPostData);
 					await this._dbContext.SaveChangesAsync();
@@ -121,7 +124,7 @@ namespace InternetBulletin.Data.DataServices
 			}
 			finally
 			{
-				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodEnded, nameof(AddNewPostAsync), DateTime.UtcNow, newPost.PostTitle));
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodEnded, nameof(AddNewPostAsync), DateTime.UtcNow, userName));
 			}
 		}
 
@@ -149,6 +152,9 @@ namespace InternetBulletin.Data.DataServices
 					{
 						dbPostData.PostTitle = updatedPost.PostTitle;
 						dbPostData.PostContent = updatedPost.PostContent;
+						dbPostData.IsNSFW = updatedPost.IsNSFW;
+						dbPostData.GenreTag = updatedPost.GenreTag;
+						dbPostData.PostModifiedDate = DateTime.UtcNow;
 
 						await this._dbContext.SaveChangesAsync();
 						return dbPostData;

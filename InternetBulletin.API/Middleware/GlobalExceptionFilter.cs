@@ -27,15 +27,15 @@ namespace InternetBulletin.API.Middleware
 		/// <summary>
 		/// Tries handle async.
 		/// </summary>
-		/// <param name="exceptionContext">The exception context.</param>
-		public void OnException(ExceptionContext exceptionContext)
+		/// <param name="context">The exception context.</param>
+		public void OnException(ExceptionContext context)
 		{
-			if (exceptionContext is not null && exceptionContext.HttpContext is not null && !exceptionContext.HttpContext.Response.HasStarted)
+			if (context is not null && context.HttpContext is not null && !context.HttpContext.Response.HasStarted)
 			{
-				var path = exceptionContext.HttpContext?.Request?.Path;
-				var user = exceptionContext.HttpContext?.User?.Identity?.Name;
-				var tracedId = exceptionContext.HttpContext?.TraceIdentifier;
-				var actionName = exceptionContext.ActionDescriptor?.DisplayName;
+				var path = context.HttpContext?.Request?.Path;
+				var user = context.HttpContext?.User?.Identity?.Name;
+				var tracedId = context.HttpContext?.TraceIdentifier;
+				var actionName = context.ActionDescriptor?.DisplayName;
 
 				var errorDictionary = new Dictionary<string, string>
 				{
@@ -44,14 +44,14 @@ namespace InternetBulletin.API.Middleware
 					{ "User", user ?? string.Empty},
 					{ "TraceId", tracedId?? string.Empty }
 				};
-				this._logger.LogError(exceptionContext.Exception.ToString(), errorDictionary);
+				this._logger.LogError(context.Exception.ToString(), errorDictionary);
 
 
-				exceptionContext.Result = new JsonResult(new InternetBulletinBusinessException
+				context.Result = new JsonResult(new InternetBulletinBusinessException
 				{
-					ExceptionMessage = exceptionContext.Exception.Message,
+					ExceptionMessage = context.Exception.Message,
 					StatusCode = StatusCodes.Status500InternalServerError,
-					Details = exceptionContext.Exception.StackTrace
+					Details = context.Exception.StackTrace
 				});
 			}
 

@@ -116,6 +116,8 @@ namespace InternetBulletin.Business.Services
                     PostOwnerUserName = post.PostOwnerUserName,
                     Ratings = post.Ratings,
                     IsActive = post.IsActive,
+                    GenreTag = post.GenreTag,
+                    IsNsfw = post.IsNSFW
                 }).ToList();
 
                 return postsData;

@@ -27,7 +27,7 @@ import { useStyles } from "@components/Posts/Components/EditPost/styles";
 import { CreatePostPageConstants } from "@helpers/ibbs.constants";
 import UpdatePostDtoModel from "@models/UpdatePostDto";
 import { loginRequests } from "@services/auth.config";
-import RewriteRequestDtoModel from "@models/RewriteRequestDto";
+import UserStoryRequestDtoModel from "@models/UserStoryRequestDto";
 
 /**
  * @component
@@ -259,7 +259,7 @@ function EditPostComponent() {
             .replace(/<[^>]*>?/gm, "")
             .trim();
         if (strippedContent !== "") {
-            var requestDto = new RewriteRequestDtoModel(postData.postContent);
+            var requestDto = new UserStoryRequestDtoModel(postData.postContent);
             const accessToken = await getAccessToken();
             dispatch(RewriteStoryWithAiAsync(requestDto, accessToken));
         }

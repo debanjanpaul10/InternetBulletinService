@@ -39,11 +39,20 @@ const useStyles = makeStyles({
         borderBottom: "1px solid " + tokens.colorNeutralStroke1,
     },
     textSizeButton: {
-        marginTop: "-10px",
         color: tokens.colorPaletteSeafoamForeground2,
         cursor: "pointer",
         fontSize: tokens.fontSizeBase300,
         textDecoration: "none",
+        boxShadow: tokens.shadow16,
+    },
+    bottomContainer: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: "8px",
+    },
+    buttonContainer: {
+        display: "flex",
     },
     headerButtons: {
         display: "flex",
@@ -61,6 +70,24 @@ const useStyles = makeStyles({
         "&:hover": {
             color: tokens.colorPaletteRedForeground2,
         },
+    },
+    tagsContainer: {
+        display: "flex",
+        gap: "8px",
+    },
+    nsfwTag: {
+        color: tokens.colorStatusDangerBackground3,
+        "&:hover": {
+            color: tokens.colorStatusDangerBackground3Hover,
+        },
+        boxShadow: tokens.shadow16,
+    },
+    genreTag: {
+        color: tokens.colorBrandForegroundLink,
+        "&:hover": {
+            color: tokens.colorBrandForegroundLinkHover,
+        },
+        boxShadow: tokens.shadow16,
     },
 });
 

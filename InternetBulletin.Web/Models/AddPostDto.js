@@ -21,15 +21,31 @@ class AddPostDtoModel {
 	postCreatedBy = "";
 
 	/**
+	 * Gets or sets the IsNSFW flag.
+	 * @type {boolean}
+	 */
+	isNSFW = false;
+
+	/**
+	 * Gets or sets the genre tag.
+	 * @type {string}
+	 */
+	genreTag = "";
+
+	/**
 	 * Creates an instance of AddPostDtoModel.
 	 * @param {string} PostTitle The title of the post.
 	 * @param {string} PostContent The content of the post.
 	 * @param {string} PostCreatedBy The user who created the post.
+	 * @param {boolean} IsNSFW The NSFW rating.
+	 * @param {string} GenreTag The genre tag.
 	 */
-	constructor(PostTitle, PostContent, PostCreatedBy) {
+	constructor(PostTitle, PostContent, PostCreatedBy, IsNSFW, GenreTag) {
 		this.postTitle = PostTitle;
 		this.postContent = PostContent;
 		this.postCreatedBy = PostCreatedBy;
+		this.isNSFW = IsNSFW;
+		this.genreTag = GenreTag;
 	}
 }
 

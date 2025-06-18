@@ -9,7 +9,6 @@ namespace InternetBulletin.API.Controllers
 {
 	using InternetBulletin.Business.Contracts;
 	using InternetBulletin.Shared.Constants;
-	using InternetBulletin.Shared.DTOs;
 	using InternetBulletin.Shared.DTOs.Posts;
 	using Microsoft.AspNetCore.Authorization;
 	using Microsoft.AspNetCore.Mvc;
@@ -47,7 +46,7 @@ namespace InternetBulletin.API.Controllers
 		{
 			try
 			{
-				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodStart, nameof(GetPostAsync), DateTime.UtcNow, string.Empty));
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodStart, nameof(GetPostAsync), DateTime.UtcNow, this.UserName ?? string.Empty));
 				var result = await this._postsService.GetAllPostsAsync(this.UserName ?? string.Empty);
 				if (result is not null && result.Count > 0)
 				{
@@ -65,7 +64,7 @@ namespace InternetBulletin.API.Controllers
 			}
 			finally
 			{
-				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodEnded, nameof(GetAllPostsDataAsync), DateTime.UtcNow, string.Empty));
+				this._logger.LogInformation(string.Format(LoggingConstants.LogHelperMethodEnded, nameof(GetAllPostsDataAsync), DateTime.UtcNow, this.UserName ?? string.Empty));
 			}
 		}
 

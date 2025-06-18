@@ -10,6 +10,9 @@ const useStyles = makeStyles({
         borderRadius: "8px",
         backgroundColor: tokens.colorNeutralCardBackground,
     },
+    cardHeaderText: {
+        boxShadow: tokens.shadow16,
+    },
     cardPreview: {
         marginTop: "auto",
         padding: "0px 10px 0px 10px",
@@ -29,6 +32,7 @@ const useStyles = makeStyles({
         "&:hover": {
             color: tokens.colorBrandForegroundLinkHover,
         },
+        boxShadow: tokens.shadow16,
     },
     cancelButton: {
         color: tokens.colorStatusDangerBackground3,
@@ -39,6 +43,7 @@ const useStyles = makeStyles({
         "&:hover": {
             color: tokens.colorStatusDangerBackground3Hover,
         },
+        boxShadow: tokens.shadow16,
     },
     aiEditButton: {
         margin: "10px 0px 10px 0px",
@@ -46,6 +51,7 @@ const useStyles = makeStyles({
         fontSize: tokens.fontSizeBase300,
         textDecoration: "none",
         padding: "0.75em",
+        boxShadow: tokens.shadow16,
     },
     addNewHeading: {
         fontFamily: "Concert One",
@@ -56,6 +62,29 @@ const useStyles = makeStyles({
         fontSize: tokens.fontSizeHero1000,
         lineHeight: 1.0,
     },
+    moderateWithAiButton: {
+        boxShadow: tokens.shadow16,
+    },
+    moderateWithAiButtonText: {
+        color: tokens.colorPaletteSeafoamBackground2,
+    },
+    nsfwTag: {
+        color: tokens.colorStatusDangerBackground3,
+        "&:hover": {
+            color: tokens.colorStatusDangerBackground3Hover,
+        },
+        boxShadow: tokens.shadow16,
+    },
+    genreTag: {
+        color: tokens.colorBrandForegroundLink,
+        "&:hover": {
+            color: tokens.colorBrandForegroundLinkHover,
+        },
+        boxShadow: tokens.shadow16,
+    },
+    textEditor: {
+        boxShadow: tokens.shadow16,
+    }
 });
 
 export { useStyles };
